@@ -275,3 +275,28 @@ Gdy taką zobaczysz — przeczytaj komentarz, zanim wkleisz. W razie wątpliwoś
   `## ŚRODOWISKO` w promptcie; profil PowerShella wtedy nie zadziała.
 - **Własne słowa-wyzwalacze** — dopisz je w sekcji `## SŁOWA-WYZWALACZE`
   według tego samego wzoru: hasło, strzałka, opis formatu.
+
+---
+
+## 8. Roadmapa / Plany rozwoju (Wkrótce)
+
+Zestaw będzie rozbudowywany o kolejne ułatwienia dla początkujących. Oto co planujemy wdrożyć w najbliższym czasie:
+
+### Etap 1: Pakiet ratunkowy "NPM Nuke"
+Częsty problem początkujących to "zepsute" pakiety Node.
+Wprowadzimy komendę `npmnuke`, która automatycznie wyczyści projekt (usunie `node_modules`, `package-lock.json`, cache) i zainstaluje zależności na nowo. Ratunek na 90% problemów z NPM.
+
+### Etap 2: Magiczne zapisywanie i przypominanie komend
+Nikt nie pamięta długich komend SSH czy Dockera.
+Wprowadzimy system `cheat vps` (ściągawki wyświetlane w terminalu) oraz aliasy `zapamietaj "nazwa" "komenda"` i `przypomnij "nazwa"`, by budować własną bazę wiedzy bez opuszczania konsoli.
+
+### Etap 3: "Auto-Zapis" dla Gita
+Dla tych, którzy boją się branchy i rebase'ów.
+Wprowadzimy komendę `gsave "wiadomość"`, która wykona za jednym zamachem `add`, `commit` i `push`. Dodamy również `gundo`, które cofnie ostatni lokalny błąd (bez usuwania plików na dysku).
+
+### Etap 4: Bezpieczny Deploy (Vercel)
+Wprowadzimy komendę `safedeploy`. Najpierw wykona ona `npm run build`. Jeśli budowanie się wysypie – automatycznie skopiuje błędy do schowka, aby użytkownik mógł od razu zapytać AI o pomoc. Jeśli się uda – wyśle kod do chmury.
+
+### Etap 5: Dedykowane Szablony Kontekstowe i Szybkie Notatki
+Zamiast jednego ogólnego `CONTEXT.md`, udostępnimy gotowce (`CONTEXT-VPS.md`, `CONTEXT-NextJS.md`).
+Pojawi się też skrót w terminalu: `ctxadd "zmieniłem port bazy"`, który dopisze notatkę na koniec pliku kontekstu, bez konieczności jego otwierania w edytorze.
