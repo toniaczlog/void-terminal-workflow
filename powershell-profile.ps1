@@ -358,7 +358,8 @@ Write-Host "    \ \    / / / __ \  |_   _||  __ \ " -ForegroundColor Magenta
 Write-Host "     \ \  / / | |  | |   | |  | |  | |" -ForegroundColor Magenta
 Write-Host "      \ \/ /  | |  | |   | |  | |  | |" -ForegroundColor Magenta
 Write-Host "       \  /   | |__| |  _| |_ | |__| |" -ForegroundColor Magenta
-Write-Host "        \/     \____/  |_____||_____/ " -ForegroundColor Magenta
+Write-Host "        \/     \____/  |_____||_____/ " -NoNewline -ForegroundColor Magenta
+Write-Host " by toniaczlog" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "    Zainicjowano profil Vibe-Coder. Logowanie aktywne." -ForegroundColor DarkGray
 Write-Host "    » Wpisz " -NoNewline -ForegroundColor DarkGray
