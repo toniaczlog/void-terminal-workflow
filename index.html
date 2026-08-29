@@ -289,14 +289,32 @@
                 <div class="glass-card p-6 rounded-2xl">
                     <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-3">
                         <span class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm">1</span> 
-                        Uczymy ChatGPT (Prompt)
+                        Uczymy Twój model AI (Prompt)
                     </h3>
-                    <p class="text-gray-400 text-sm mb-3 ml-11">To ten trik, żeby przestał dużo gadać.</p>
-                    <ol class="list-decimal list-inside text-gray-300 text-sm space-y-2 ml-11">
-                        <li>W ChatGPT wejdź w <strong>Ustawienia</strong> (Settings) &rarr; <strong>Personalization</strong> &rarr; <strong>Custom instructions</strong>.</li>
-                        <li>Na GitHubie skopiuj treść pliku <code class="text-purple-300 bg-white/5 px-1 rounded">chatgpt-prompt.md</code> (tę górną część).</li>
-                        <li>Wklej do drugiego pola w ChatGPT ("How would you like..."). Zapisz!</li>
-                    </ol>
+                    <p class="text-gray-400 text-sm mb-4 ml-11">Nieważne czy używasz ChatGPT, Claude czy Gemini. Wgraj <code class="text-purple-300 bg-white/5 px-1 rounded">system-prompt.md</code>, by zmusić je do konkretów.</p>
+                    
+                    <div class="ml-11 space-y-4">
+                        <div class="bg-void-900/50 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-bold text-white mb-2 flex items-center gap-2"><i class="fas fa-robot text-emerald-400"></i> ChatGPT</h4>
+                            <ol class="list-decimal list-inside text-gray-300 text-sm space-y-1">
+                                <li>Kliknij swój awatar &rarr; <strong>Settings</strong> &rarr; <strong>Personalization</strong> &rarr; <strong>Custom instructions</strong>.</li>
+                                <li>Wklej skopiowany prompt z pliku do drugiego pola <em>("How would you like ChatGPT to respond?")</em>.</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="bg-void-900/50 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-bold text-white mb-2 flex items-center gap-2"><i class="fas fa-comment-dots text-orange-400"></i> Claude</h4>
+                            <ol class="list-decimal list-inside text-gray-300 text-sm space-y-1">
+                                <li>W wersji Claude Pro użyj funkcji <strong>Projects</strong> (Projekty).</li>
+                                <li>W ustawieniach projektu wklej ten kod w pole <strong>"Custom Instructions"</strong>.</li>
+                            </ol>
+                        </div>
+                        
+                        <div class="bg-void-900/50 p-4 rounded-xl border border-white/5">
+                            <h4 class="font-bold text-white mb-2 flex items-center gap-2"><i class="fas fa-bolt text-blue-400"></i> Gemini (i pozostałe aplikacje WWW)</h4>
+                            <p class="text-gray-300 text-sm">Jeśli model nie posiada globalnych "instrukcji", po prostu <strong>wklej treść promptu w pierwszej wiadomości</strong> na początku nowej rozmowy. Zadziała dokładnie tak samo!</p>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Krok 2 -->
