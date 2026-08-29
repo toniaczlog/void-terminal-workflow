@@ -236,7 +236,7 @@ function prompt {
     # --- Etap 9: Health Checks (Offline Radar) ---
     try {
         if (-not [System.Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable()) {
-            Write-Host " ❌ BRAK SIECI (Możesz mieć problem z AI) " -BackgroundColor Red -ForegroundColor White
+            Write-Host " ❌ Houston, odcięło nas od AI! Brak neta. " -BackgroundColor Red -ForegroundColor White
         }
     } catch {}
 
@@ -265,12 +265,20 @@ function prompt {
     
     # --- Etap 8: Inteligentne sensory (Stack) ---
     $stack = @()
-    if (Test-Path "package.json") { $stack += "⚛️ Node" }
-    if (Test-Path "docker-compose.yml") { $stack += "🐳 Docker" }
-    if (Test-Path "main.py" -or Test-Path "requirements.txt") { $stack += "🐍 Python" }
+    $hasNodeModules = Test-Path "node_modules"
+    
+    if (Test-Path "package.json") { 
+        $stack += "⚛️ O, projekt w Node!" 
+        if (-not $hasNodeModules) {
+            $stack += "📦 (Psst, brakuje node_modules - wpisz 'npm install' lub 'npmnuke')"
+        }
+    }
+    if (Test-Path "docker-compose.yml") { $stack += "🐳 Widzę Dockera" }
+    if (Test-Path "main.py" -or Test-Path "requirements.txt") { $stack += "🐍 Pythonowe klimaty" }
+    
     if ($stack.Count -gt 0) {
         Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-        Write-Host ($stack -join ", ") -NoNewline -ForegroundColor Cyan
+        Write-Host ($stack -join " | ") -NoNewline -ForegroundColor Cyan
         Write-Host " ]" -NoNewline -ForegroundColor DarkGray
     }
 
@@ -279,12 +287,15 @@ function prompt {
         $gitBranch = git branch --show-current 2>$null
         if ($gitBranch) {
             $gitStatus = git status --porcelain 2>$null
-            $gitColor = if ($gitStatus) { "Red" } else { "Yellow" }
-            $dirtyStar = if ($gitStatus) { "*" } else { "" }
-            
-            Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-            Write-Host "git: $gitBranch$dirtyStar" -NoNewline -ForegroundColor $gitColor
-            Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+            if ($gitStatus) {
+                Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
+                Write-Host "⚠️ Masz niezapisany kod na branchu '$gitBranch' (zrób 'gsave')" -NoNewline -ForegroundColor Red
+                Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+            } else {
+                Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
+                Write-Host "git: $gitBranch" -NoNewline -ForegroundColor Yellow
+                Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+            }
         }
     }
     
@@ -292,7 +303,7 @@ function prompt {
     $nodeProcs = @(Get-Process node -ErrorAction SilentlyContinue)
     if ($nodeProcs.Count -gt 0) {
         Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-        Write-Host "🧟 $($nodeProcs.Count) Node" -NoNewline -ForegroundColor Magenta
+        Write-Host "🧟 Znalazłem $($nodeProcs.Count) ukryte procesy Node (może zamulać)" -NoNewline -ForegroundColor Magenta
         Write-Host " ]" -NoNewline -ForegroundColor DarkGray
     }
     
