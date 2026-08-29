@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Void Terminal Workflow | Koduj z AI bez frustracji</title>
+    <title>Void Terminal Workflow | Vibe-coding bez frustracji</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script>
@@ -13,33 +13,20 @@
                 extend: {
                     colors: {
                         void: {
-                            900: '#0a0a0f',
-                            800: '#13131a',
-                            700: '#1c1c26',
-                            600: '#2a2a35',
-                            accent: '#6366f1', // Indigo
-                            glow: '#8b5cf6'    // Violet
+                            900: '#0f0f17',
+                            800: '#181824',
+                            700: '#232333',
+                            accent: '#8b5cf6', // Violet as primary friendly color
                         }
                     },
                     fontFamily: {
                         sans: ['Inter', 'system-ui', 'sans-serif'],
-                        mono: ['JetBrains Mono', 'Fira Code', 'Consolas', 'monospace'],
+                        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
                     },
                     animation: {
-                        'gradient-x': 'gradient-x 15s ease infinite',
                         'float': 'float 6s ease-in-out infinite',
                     },
                     keyframes: {
-                        'gradient-x': {
-                            '0%, 100%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'left center'
-                            },
-                            '50%': {
-                                'background-size': '200% 200%',
-                                'background-position': 'right center'
-                            },
-                        },
                         'float': {
                             '0%, 100%': { transform: 'translateY(0)' },
                             '50%': { transform: 'translateY(-10px)' },
@@ -50,79 +37,54 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
         
         body {
-            background-color: #0a0a0f;
+            background-color: #0f0f17;
             color: #e2e8f0;
             font-family: 'Inter', sans-serif;
         }
         
-        /* Subtle grid background */
         .bg-grid {
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 40px 40px;
-            mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
-            -webkit-mask-image: radial-gradient(ellipse at center, black 40%, transparent 80%);
+            background-image: radial-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px);
+            background-size: 30px 30px;
         }
 
         .text-gradient {
-            background: linear-gradient(135deg, #a78bfa 0%, #60a5fa 100%);
+            background: linear-gradient(135deg, #a78bfa 0%, #ec4899 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
 
         .glass-card {
-            background: rgba(19, 19, 26, 0.7);
+            background: rgba(24, 24, 36, 0.6);
             backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-        }
-        
-        .terminal-shadow {
-            box-shadow: 0 0 40px -10px rgba(99, 102, 241, 0.3);
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #0a0a0f;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #2a2a35;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #6366f1;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-indigo-500/30 selection:text-indigo-200 relative overflow-x-hidden">
+<body class="antialiased selection:bg-purple-500/30 selection:text-purple-200 relative overflow-x-hidden">
 
     <!-- Background Effects -->
     <div class="fixed inset-0 z-[-1] bg-grid pointer-events-none"></div>
-    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-indigo-600/20 rounded-full blur-[120px] pointer-events-none z-[-1]"></div>
+    <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
 
     <!-- Navigation -->
-    <nav class="fixed w-full z-50 glass-card border-b-0 border-white/5 transition-all duration-300">
+    <nav class="fixed w-full z-50 glass-card border-b-0 border-white/5">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
                 <div class="flex-shrink-0 flex items-center gap-2">
-                    <i class="fas fa-terminal text-indigo-400 text-xl"></i>
-                    <span class="font-bold text-xl tracking-tight text-white">Void<span class="text-indigo-400 font-normal">Workflow</span></span>
+                    <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                        <i class="fas fa-terminal text-white text-sm"></i>
+                    </div>
+                    <span class="font-bold text-xl tracking-tight text-white">VoidWorkflow</span>
                 </div>
-                <div class="flex items-center gap-6 text-sm font-medium">
-                    <a href="#jak-to-dziala" class="text-gray-400 hover:text-white transition-colors hidden sm:block">Jak to działa</a>
-                    <a href="#narzedzia" class="text-gray-400 hover:text-white transition-colors hidden sm:block">Narzędzia</a>
-                    <a href="#instalacja" class="text-gray-400 hover:text-white transition-colors hidden sm:block">Instalacja</a>
-                    <a href="https://github.com/toniaczlog/void-terminal-workflow" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-white/5 hover:bg-white/10 border border-white/10 text-white px-4 py-2 rounded-lg transition-all">
-                        <i class="fab fa-github text-lg"></i>
-                        <span>GitHub</span>
+                <div class="flex items-center gap-4 text-sm font-medium">
+                    <a href="https://github.com/toniaczlog/void-terminal-workflow" target="_blank" rel="noopener noreferrer" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-4 py-2 rounded-lg transition-all">
+                        <i class="fab fa-github"></i>
+                        <span class="hidden sm:inline">Pobierz z GitHub</span>
                     </a>
                 </div>
             </div>
@@ -130,180 +92,138 @@
     </nav>
 
     <!-- Hero Section -->
-    <section class="pt-32 pb-20 sm:pt-40 sm:pb-24 lg:pb-32 px-4 relative">
-        <div class="max-w-5xl mx-auto text-center">
-            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-300 text-xs font-semibold uppercase tracking-wide mb-8 animate-fade-in-up">
-                <span class="relative flex h-2 w-2">
-                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
-                  <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-500"></span>
-                </span>
-                Gotowe do pracy z ChatGPT
+    <section class="pt-32 pb-20 sm:pt-40 sm:pb-24 lg:pb-32 px-4 relative text-center">
+        <div class="max-w-4xl mx-auto">
+            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold uppercase tracking-wide mb-8">
+                <i class="fas fa-magic"></i> Narzędzie dla Vibe-Coderów
             </div>
             
-            <h1 class="text-5xl sm:text-6xl md:text-7xl font-extrabold tracking-tight mb-6 leading-tight">
-                Koduj z AI <br class="hidden sm:block">
-                <span class="text-gradient">bez frustracji</span>.
+            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                Zbuduj most między przeglądarką<br class="hidden sm:block">
+                a <span class="text-gradient">Twoim komputerem</span>.
             </h1>
             
-            <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Minimalistyczny zestaw dla Windows, który uczy ChatGPT odpisywać konkretami i daje Ci terminalowe supermoce. Koniec z przepisywaniem błędów i czytaniem esejów od modelu.
+            <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
+                Używaj modeli WWW (ChatGPT, Claude) z własnej subskrypcji. <strong>Bez kluczy API, bez skomplikowanych opłat.</strong> Nasz prosty zestaw łączy czat w przeglądarce z Twoim lokalnym Windows Terminalem.
             </p>
             
             <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="#instalacja" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white font-semibold shadow-[0_0_20px_rgba(79,70,229,0.4)] hover:shadow-[0_0_30px_rgba(79,70,229,0.6)] transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-bolt text-indigo-200"></i>
-                    Zainstaluj w 5 minut
+                <a href="#instalacja" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all">
+                    Zainstaluj u siebie (5 min)
                 </a>
-                <a href="#jak-to-dziala" class="w-full sm:w-auto px-8 py-3.5 rounded-lg bg-void-800 hover:bg-void-700 border border-white/10 text-gray-300 hover:text-white font-medium transition-all flex items-center justify-center gap-2">
-                    Zobacz jak to działa <i class="fas fa-arrow-down text-sm"></i>
+                <a href="#jak-to-dziala" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-void-800 hover:bg-void-700 border border-white/10 text-gray-300 hover:text-white font-medium transition-all">
+                    Zobacz jak to działa
                 </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Dlaczego WWW? -->
+    <section class="py-12 relative z-10">
+        <div class="max-w-5xl mx-auto px-4">
+            <div class="glass-card rounded-2xl p-8 border-l-4 border-l-pink-500 flex flex-col md:flex-row items-center gap-8">
+                <div class="md:w-2/3">
+                    <h3 class="text-2xl font-bold text-white mb-2">Po co Ci to, skoro są narzędzia z AI?</h3>
+                    <p class="text-gray-300 mb-4">
+                        Większość narzędzi wbudowanych w edytory wymaga podpinania <strong>płatnych kluczy API</strong> (płacisz za każde wywołanie). Tymczasem prawdopodobnie opłacasz już ChatGPT Plus lub Claude Pro w przeglądarce!
+                    </p>
+                    <p class="text-gray-300">
+                        VoidWorkflow to lekki pomost. Pracujesz w swojej ulubionej przeglądarce, a dzięki naszym skrótom bez frustracji przenosisz komendy, kody i logi błędów wprost do Windows Terminala.
+                    </p>
+                </div>
+                <div class="md:w-1/3 flex justify-center text-6xl text-pink-500/50">
+                    <i class="fas fa-infinity"></i>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Jak to działa (Workflow Showcase) -->
-    <section id="jak-to-dziala" class="py-24 relative z-10">
+    <section id="jak-to-dziala" class="py-24 relative z-10 bg-void-900/50 border-y border-white/5">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Twój nowy workflow</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Przekształcamy chaos w uporządkowany proces. Oszczędzasz czas na każdej interakcji z modelem.</p>
+                <h2 class="text-3xl font-bold mb-4">Jak ułatwiamy "Vibe-Coding"?</h2>
+                <p class="text-gray-400 max-w-2xl mx-auto">Vibe-coding to programowanie poprzez rozmawianie z AI. Oto jak likwidujemy z niego nudne klikanie.</p>
             </div>
 
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <!-- Teksty / Kroki -->
-                <div class="space-y-8">
-                    <!-- Krok 1 -->
-                    <div class="relative pl-10">
-                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-indigo-500/20 border border-indigo-500 flex items-center justify-center text-indigo-400 font-bold text-xs">1</div>
-                        <div class="absolute left-3 top-8 w-[1px] h-full bg-gradient-to-b from-indigo-500/50 to-transparent"></div>
-                        <h3 class="text-xl font-bold text-white mb-2">Błyskawiczny Kontekst</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Wpisujesz w terminalu <code class="text-indigo-300 font-mono text-xs bg-indigo-500/10 px-1.5 py-0.5 rounded">filec .\CONTEXT.md</code>. Struktura i założenia projektu lądują w schowku. Wklejasz to na start rozmowy — AI od razu "czuje" Twój kod.
-                        </p>
+            <div class="grid lg:grid-cols-3 gap-8">
+                <!-- Karta 1 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-12 h-12 bg-blue-500/20 text-blue-400 rounded-xl flex items-center justify-center text-xl mb-4">
+                        <i class="fas fa-brain"></i>
                     </div>
-                    
-                    <!-- Krok 2 -->
-                    <div class="relative pl-10">
-                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-purple-500/20 border border-purple-500 flex items-center justify-center text-purple-400 font-bold text-xs">2</div>
-                        <div class="absolute left-3 top-8 w-[1px] h-full bg-gradient-to-b from-purple-500/50 to-transparent"></div>
-                        <h3 class="text-xl font-bold text-white mb-2">Precyzyjne Polecenia</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Zaczynasz wiadomość od magicznego słowa: <code class="text-purple-300 font-mono text-xs bg-purple-500/10 px-1.5 py-0.5 rounded">TERMINAL: dodaj bazę danych</code>. Model odpowiada <strong>tylko i wyłącznie</strong> gotowym blokiem komend do skopiowania. Zero tłumaczenia teorii.
-                        </p>
-                    </div>
-
-                    <!-- Krok 3 -->
-                    <div class="relative pl-10">
-                        <div class="absolute left-0 top-1 w-6 h-6 rounded-full bg-pink-500/20 border border-pink-500 flex items-center justify-center text-pink-400 font-bold text-xs">3</div>
-                        <h3 class="text-xl font-bold text-white mb-2">Łapanie Błędów w Lot</h3>
-                        <p class="text-gray-400 text-sm leading-relaxed">
-                            Aplikacja wybuchła? Konsola zalała się czerwonym błędem, który zniknął na górze ekranu? Wpisujesz <code class="text-pink-300 font-mono text-xs bg-pink-500/10 px-1.5 py-0.5 rounded">loglast</code>. Ostatnie akcje trafiają do schowka. Wklejasz do AI i naprawiasz.
-                        </p>
-                    </div>
+                    <h3 class="text-lg font-bold text-white mb-2">1. Ładowanie Pamięci (CONTEXT)</h3>
+                    <p class="text-gray-400 text-sm mb-4">Tworzysz nową rozmowę w przeglądarce. Zamiast tłumaczyć AI wszystko od zera, wpisujesz w konsoli:</p>
+                    <code class="block bg-void-900 p-2 rounded text-blue-300 text-sm font-mono border border-white/10">filec .\CONTEXT.md</code>
+                    <p class="text-gray-400 text-sm mt-3">...i wklejasz w czat (Ctrl+V). Model od razu "wie", w czym piszecie.</p>
                 </div>
 
-                <!-- Mockup Terminala -->
-                <div class="glass-card rounded-xl border border-white/10 overflow-hidden terminal-shadow animate-float">
-                    <!-- Terminal Header -->
-                    <div class="bg-void-900 border-b border-white/5 px-4 py-3 flex items-center gap-2">
-                        <div class="flex gap-1.5">
-                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                        </div>
-                        <div class="mx-auto text-xs font-mono text-gray-500">powershell.exe - Void Workflow</div>
+                <!-- Karta 2 -->
+                <div class="glass-card p-6 rounded-2xl border-purple-500/30">
+                    <div class="w-12 h-12 bg-purple-500/20 text-purple-400 rounded-xl flex items-center justify-center text-xl mb-4">
+                        <i class="fas fa-comment-dots"></i>
                     </div>
-                    <!-- Terminal Body -->
-                    <div class="p-6 font-mono text-sm leading-relaxed">
-                        <div class="mb-4">
-                            <span class="text-emerald-400">user@void</span><span class="text-gray-400">:</span><span class="text-blue-400">~/app</span><span class="text-gray-400">$</span>
-                            <span class="text-white ml-2">filec .\CONTEXT.md</span>
-                            <div class="text-gray-500 mt-1">✓ Skopiowano zawartość pliku do schowka.</div>
-                        </div>
-                        
-                        <div class="mb-4">
-                            <span class="text-emerald-400">user@void</span><span class="text-gray-400">:</span><span class="text-blue-400">~/app</span><span class="text-gray-400">$</span>
-                            <span class="text-white ml-2">npm run build</span>
-                            <div class="text-red-400 mt-1">
-                                Failed to compile.<br>
-                                ./src/app/page.tsx:12:5<br>
-                                Error: Module not found: Can't resolve 'framer-motion'
-                            </div>
-                        </div>
+                    <h3 class="text-lg font-bold text-white mb-2">2. Zero "lania wody" (Prompt)</h3>
+                    <p class="text-gray-400 text-sm mb-4">Gdy piszesz z AI, używasz specjalnego tagu:</p>
+                    <div class="bg-void-900 p-2 rounded border border-white/10 mb-3">
+                        <span class="text-purple-400 font-mono text-xs font-bold bg-purple-500/20 px-1 rounded">TERMINAL:</span>
+                        <span class="text-gray-300 text-sm">dodaj bazę danych</span>
+                    </div>
+                    <p class="text-gray-400 text-sm">Model odpowiada <strong>TYLKO</strong> gotową komendą do skopiowania. Koniec z czytaniem wypracowań!</p>
+                </div>
 
-                        <div>
-                            <span class="text-emerald-400">user@void</span><span class="text-gray-400">:</span><span class="text-blue-400">~/app</span><span class="text-gray-400">$</span>
-                            <span class="text-white ml-2">loglast 20</span>
-                            <div class="text-gray-500 mt-1">✓ Ostatnie 20 linii logów skopiowano do schowka.</div>
-                            <div class="inline-block px-2 py-1 mt-2 bg-indigo-500/20 text-indigo-300 rounded border border-indigo-500/30 text-xs">
-                                <i class="fas fa-clipboard mr-1"></i> Gotowe do wklejenia w ChatGPT
-                            </div>
-                        </div>
+                <!-- Karta 3 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <div class="w-12 h-12 bg-pink-500/20 text-pink-400 rounded-xl flex items-center justify-center text-xl mb-4">
+                        <i class="fas fa-bug"></i>
                     </div>
+                    <h3 class="text-lg font-bold text-white mb-2">3. Błyskawiczne łapanie błędów</h3>
+                    <p class="text-gray-400 text-sm mb-4">Wklejasz komendę, a konsola pluje błędem? Zamiast zaznaczać tekst myszką, wpisujesz:</p>
+                    <code class="block bg-void-900 p-2 rounded text-pink-300 text-sm font-mono border border-white/10">loglast</code>
+                    <p class="text-gray-400 text-sm mt-3">Ostatnie błędy same kopiują się do schowka. Wklejasz w czat i model to naprawia.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Narzędzia -->
-    <section id="narzedzia" class="py-24 bg-void-900/50 border-y border-white/5 relative">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Twój Arsenał</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Te dwa elementy diametralnie zmieniają jakość odpowiedzi i Twoją szybkość w konsoli.</p>
-            </div>
-
-            <div class="grid md:grid-cols-2 gap-6">
-                <!-- Magiczne Słowa -->
-                <div class="glass-card p-8 rounded-2xl hover:border-indigo-500/30 transition-colors group">
-                    <div class="w-12 h-12 bg-indigo-500/10 border border-indigo-500/20 rounded-xl flex items-center justify-center mb-6 text-indigo-400 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-sparkles text-xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2">Tagi dla ChatGPT</h3>
-                    <p class="text-gray-400 text-sm mb-6">Wpisuj je na początku wiadomości (wynikają z wgranego promptu):</p>
-                    
-                    <ul class="space-y-3">
-                        <li class="flex flex-col sm:flex-row sm:items-start gap-2 bg-void-800/50 p-3 rounded-lg border border-white/5">
-                            <span class="font-mono text-xs font-bold text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded w-fit">TERMINAL:</span>
-                            <span class="text-sm text-gray-300">Czysty kod powłoki. Zawsze podaje komendę weryfikującą sukces.</span>
+    <!-- Narzędzia: Magiczne słowa i skróty -->
+    <section class="py-24 relative">
+        <div class="max-w-5xl mx-auto px-4">
+            <h2 class="text-3xl font-bold text-center mb-12">Twój nowy arsenał</h2>
+            
+            <div class="grid sm:grid-cols-2 gap-6">
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Tagi dla AI (W przeglądarce)</h3>
+                    <ul class="space-y-4 text-sm">
+                        <li>
+                            <span class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded">TERMINAL:</span>
+                            <span class="text-gray-300 block mt-1">Daje gotowy kod do wklejenia do konsoli. Z instrukcją "co powinno się pojawić".</span>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start gap-2 bg-void-800/50 p-3 rounded-lg border border-white/5">
-                            <span class="font-mono text-xs font-bold text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded w-fit">PLIK:</span>
-                            <span class="text-sm text-gray-300">Cały kod pliku od góry do dołu. Zaznaczasz Ctrl+A i wklejasz. Zero domysłów.</span>
+                        <li>
+                            <span class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded">PLIK:</span>
+                            <span class="text-gray-300 block mt-1">Zwraca cały plik kodu. Ctrl+A, Ctrl+V i gotowe. Zero szukania "gdzie to wkleić".</span>
                         </li>
-                        <li class="flex flex-col sm:flex-row sm:items-start gap-2 bg-void-800/50 p-3 rounded-lg border border-white/5">
-                            <span class="font-mono text-xs font-bold text-indigo-400 bg-indigo-400/10 px-2 py-1 rounded w-fit">HANDOFF:</span>
-                            <span class="text-sm text-gray-300">Spisuje wiedzę na koniec pracy, aby uaktualnić plik pamięci projektu.</span>
+                        <li>
+                            <span class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded">HANDOFF:</span>
+                            <span class="text-gray-300 block mt-1">Prosi AI o podsumowanie dzisiejszej pracy, by zapisać to do pamięci projektu.</span>
                         </li>
                     </ul>
                 </div>
-
-                <!-- Skróty Terminala -->
-                <div class="glass-card p-8 rounded-2xl hover:border-emerald-500/30 transition-colors group">
-                    <div class="w-12 h-12 bg-emerald-500/10 border border-emerald-500/20 rounded-xl flex items-center justify-center mb-6 text-emerald-400 group-hover:scale-110 transition-transform">
-                        <i class="fas fa-terminal text-xl"></i>
-                    </div>
-                    <h3 class="text-2xl font-bold mb-2">Skróty PowerShell</h3>
-                    <p class="text-gray-400 text-sm mb-6">Funkcje dodawane prosto do Twojego Windows Terminala:</p>
-                    
-                    <ul class="space-y-3">
-                        <li class="bg-void-800/50 p-3 rounded-lg border border-white/5">
-                            <code class="font-mono text-sm font-bold text-emerald-400">runc "npm run dev"</code>
-                            <p class="text-sm text-gray-300 mt-1">Odpala komendę, a jej <strong>wynik ląduje w schowku</strong>. Idealne do przekazania logów na bieżąco.</p>
+                
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Skróty (W Terminalu)</h3>
+                    <ul class="space-y-4 text-sm">
+                        <li>
+                            <code class="font-mono font-bold text-blue-400 text-sm">runc "komenda"</code>
+                            <span class="text-gray-300 block mt-1">Wykonuje komendę i od razu kopiuje jej wynik! Magia przy testowaniu.</span>
                         </li>
-                        <li class="bg-void-800/50 p-3 rounded-lg border border-white/5">
-                            <code class="font-mono text-sm font-bold text-emerald-400">tree2</code>
-                            <p class="text-sm text-gray-300 mt-1">Kopiuje mapę plików (do 2 lub 3 poziomów w głąb), omijając ciężkie foldery jak node_modules.</p>
+                        <li>
+                            <code class="font-mono font-bold text-blue-400 text-sm">tree2</code>
+                            <span class="text-gray-300 block mt-1">Kopiuje "drzewko" plików w Twoim projekcie. Pomaga AI odnaleźć się w kodzie.</span>
                         </li>
-                        <li class="bg-void-800/50 p-3 rounded-lg border border-white/5">
-                            <div class="flex gap-2">
-                                <code class="font-mono text-sm font-bold text-emerald-400">gs</code>
-                                <span class="text-gray-500 text-sm">= git status</span>
-                            </div>
-                            <div class="flex gap-2 mt-1">
-                                <code class="font-mono text-sm font-bold text-emerald-400">gl</code>
-                                <span class="text-gray-500 text-sm">= lista ostatnich commitów</span>
-                            </div>
+                        <li>
+                            <code class="font-mono font-bold text-blue-400 text-sm">filec .\plik.txt</code>
+                            <span class="text-gray-300 block mt-1">Kopiuje plik z ładnym nagłówkiem do podania go w czacie.</span>
                         </li>
                     </ul>
                 </div>
@@ -312,96 +232,81 @@
     </section>
 
     <!-- Instalacja -->
-    <section id="instalacja" class="py-24 relative">
+    <section id="instalacja" class="py-24 bg-void-900/80 border-t border-white/5 relative">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16">
-                <h2 class="text-3xl sm:text-4xl font-bold mb-4">Prosta Instalacja</h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Skonfiguruj środowisko w 5 minut. Wystarczy skopiować dwa pliki i raz użyć terminala.</p>
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-4">Instalacja (bez paniki)</h2>
+                <p class="text-gray-400">Jesteś na początku swojej drogi? Spokojnie. To tylko wgranie dwóch tekstów na swoje miejsca. Zrobimy to w 3 minuty.</p>
             </div>
 
-            <!-- Pliki z GitHuba button -->
             <div class="flex justify-center mb-12">
-                <a href="https://github.com/toniaczlog/void-terminal-workflow" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-lg bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center gap-3">
-                    <i class="fab fa-github text-xl"></i> Pobierz pliki instalacyjne z GitHub
+                <a href="https://github.com/toniaczlog/void-terminal-workflow" target="_blank" rel="noopener noreferrer" class="px-6 py-3 rounded-xl bg-white text-black font-bold hover:bg-gray-200 transition-colors flex items-center gap-3">
+                    <i class="fab fa-github text-xl"></i> Otwórz pliki na GitHub
                 </a>
             </div>
 
-            <div class="space-y-8">
-                <!-- Krok A -->
-                <div class="glass-card p-6 sm:p-8 rounded-2xl border-l-4 border-l-indigo-500">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold text-xl font-mono">1</div>
-                        <h3 class="text-2xl font-bold">Zaktualizuj mózg ChatGPT</h3>
-                    </div>
-                    <p class="text-gray-400 mb-4">Ten krok sprawi, że ChatGPT zacznie reagować na tagi typu <code>TERMINAL:</code>.</p>
-                    <ol class="list-decimal list-inside text-gray-300 space-y-2 ml-2">
-                        <li>W ChatGPT (WWW) kliknij ikonę profilu &rarr; <strong>Settings</strong> &rarr; <strong>Personalization</strong>.</li>
-                        <li>Wybierz <strong>Custom instructions</strong>.</li>
-                        <li>Z repozytorium GitHub skopiuj treść pliku <code class="text-indigo-300">chatgpt-prompt.md</code> (sekcja ŚRODOWISKO).</li>
-                        <li>Wklej w dolne pole: <em>"How would you like ChatGPT to respond?"</em> i zapisz.</li>
+            <div class="space-y-6">
+                <!-- Krok 1 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-purple-500 text-white flex items-center justify-center text-sm">1</span> 
+                        Uczymy ChatGPT (Prompt)
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-3 ml-11">To ten trik, żeby przestał dużo gadać.</p>
+                    <ol class="list-decimal list-inside text-gray-300 text-sm space-y-2 ml-11">
+                        <li>W ChatGPT wejdź w <strong>Ustawienia</strong> (Settings) &rarr; <strong>Personalization</strong> &rarr; <strong>Custom instructions</strong>.</li>
+                        <li>Na GitHubie skopiuj treść pliku <code class="text-purple-300 bg-white/5 px-1 rounded">chatgpt-prompt.md</code> (tę górną część).</li>
+                        <li>Wklej do drugiego pola w ChatGPT ("How would you like..."). Zapisz!</li>
                     </ol>
                 </div>
 
-                <!-- Krok B -->
-                <div class="glass-card p-6 sm:p-8 rounded-2xl border-l-4 border-l-emerald-500">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-xl font-mono">2</div>
-                        <h3 class="text-2xl font-bold">Wgraj profil PowerShell</h3>
-                    </div>
-                    <p class="text-gray-400 mb-4">Ten krok dodaje komendy (np. `loglast`, `filec`) i nagrywanie błędów do Twojego komputera.</p>
+                <!-- Krok 2 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-blue-500 text-white flex items-center justify-center text-sm">2</span> 
+                        Skróty do Terminala
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-3 ml-11">Dodajemy komendy do Twojego komputera.</p>
                     
-                    <div class="space-y-4">
-                        <div>
-                            <p class="text-gray-300 font-medium mb-2">A. Wklej to w Windows Terminal, by otworzyć plik ustawień:</p>
-                            <div class="bg-void-900 border border-white/10 rounded-lg p-4 font-mono text-sm text-gray-300 overflow-x-auto">
-                                <span class="text-gray-500"># Zrób to w zwykłym Windows Terminal (PowerShell)</span><br>
-                                if (-not (Test-Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File -Force }<br>
-                                notepad $PROFILE
-                            </div>
+                    <div class="ml-11 space-y-4 text-sm text-gray-300">
+                        <p><strong>A.</strong> Wklej to w czarne okienko Windows Terminal, by otworzyć konfigurację w Notatniku:</p>
+                        <div class="bg-void-900 border border-white/10 rounded-lg p-3 font-mono text-blue-300">
+                            if (-not (Test-Path $PROFILE)) { New-Item -Path $PROFILE -ItemType File -Force }<br>
+                            notepad $PROFILE
                         </div>
-                        <div>
-                            <p class="text-gray-300 font-medium mb-2">B. Wklej kod ze schowka:</p>
-                            <p class="text-gray-400 text-sm">Otworzy się Notatnik. Skopiuj całą zawartość pliku <code class="text-emerald-300">powershell-profile.ps1</code> (z GitHuba), wklej, <strong>zapisz (Ctrl+S) i zamknij</strong>.</p>
-                        </div>
-                        <div>
-                            <p class="text-gray-300 font-medium mb-2">C. Aktywuj:</p>
-                            <div class="bg-void-900 border border-white/10 rounded-lg p-3 font-mono text-sm text-emerald-400 inline-block">
-                                . $PROFILE
-                            </div>
-                            <p class="text-xs text-gray-500 mt-2">Błąd z zablokowanymi skryptami? Wpisz raz: <code class="text-gray-400">Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code> i potwierdź.</p>
+                        <p><strong>B.</strong> Skopiuj cały kod z pliku <code class="text-blue-300 bg-white/5 px-1 rounded">powershell-profile.ps1</code> (na GitHubie) i wklej do Notatnika. <strong>Zapisz i zamknij.</strong></p>
+                        <p><strong>C.</strong> Odśwież terminal wpisując w nim:</p>
+                        <div class="bg-void-900 border border-white/10 rounded-lg p-2 font-mono text-blue-300 inline-block">. $PROFILE</div>
+                        <div class="mt-2 text-xs text-gray-500 bg-void-900/50 p-2 rounded border border-white/5">
+                            Czerwony błąd? Wpisz to, potwierdź i powtórz krok C:<br>
+                            <code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code>
                         </div>
                     </div>
                 </div>
 
-                <!-- Krok C -->
-                <div class="glass-card p-6 sm:p-8 rounded-2xl border-l-4 border-l-purple-500">
-                    <div class="flex items-center gap-4 mb-4">
-                        <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold text-xl font-mono">3</div>
-                        <h3 class="text-2xl font-bold">Stwórz CONTEXT.md (Baza wiedzy)</h3>
-                    </div>
-                    <p class="text-gray-400 mb-4">Dla każdego nowego projektu, twórz w jego głównym folderze plik <code>CONTEXT.md</code>.</p>
-                    <p class="text-gray-300 text-sm leading-relaxed">
-                        Skopiuj szablon z <code class="text-purple-300">context-template.md</code> i uzupełniaj go w miarę rozwoju aplikacji. Jeśli wskakujesz w stary projekt, poproś model: <br>
-                        <em class="text-white bg-white/5 px-2 py-1 rounded inline-block mt-2 font-mono">HANDOFF: przygotuj CONTEXT.md na podstawie tej rozmowy</em>.
-                    </p>
+                <!-- Krok 3 -->
+                <div class="glass-card p-6 rounded-2xl">
+                    <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-3">
+                        <span class="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center text-sm">3</span> 
+                        Zawsze pamiętaj o CONTEXT.md
+                    </h3>
+                    <p class="text-gray-400 text-sm mb-2 ml-11">W każdym folderze swojego projektu załóż plik <code class="text-white">CONTEXT.md</code> i wklej tam szablon z naszego GitHuba (<code class="text-white">context-template.md</code>). AI będzie korzystać z niego jak z mapy.</p>
                 </div>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-    <footer class="border-t border-white/10 bg-void-900/80 mt-12 py-12">
-        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center gap-6">
+    <footer class="border-t border-white/10 bg-void-900/80 py-10 text-center">
+        <div class="max-w-6xl mx-auto px-4 flex flex-col items-center gap-4">
             <div class="flex items-center gap-2">
-                <i class="fas fa-terminal text-indigo-500"></i>
-                <span class="font-bold text-white">Void<span class="text-indigo-400 font-normal">Workflow</span></span>
+                <i class="fas fa-terminal text-purple-500"></i>
+                <span class="font-bold text-white">Void<span class="text-purple-400 font-normal">Workflow</span></span>
             </div>
-            
-            <p class="text-gray-500 text-sm">
-                Narzędzie open-source stworzone, aby ułatwić wejście w świat programowania z AI.
+            <p class="text-gray-500 text-sm max-w-md">
+                Stworzone po to, żebyś nie musiał płacić za API, gdy masz już dostęp do najlepszych modeli przez WWW. Koduj mądrze.
             </p>
-
-            <a href="https://github.com/toniaczlog/void-terminal-workflow" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors">
+            <a href="https://github.com/toniaczlog/void-terminal-workflow" class="text-gray-400 hover:text-white transition-colors mt-2">
                 <i class="fab fa-github text-2xl"></i>
             </a>
         </div>
