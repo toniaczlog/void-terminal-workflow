@@ -39,6 +39,25 @@ Elementy działają osobno. Możesz wdrożyć tylko pierwszy i już będzie lepi
 - **Schowek** — miejsce, gdzie ląduje to, co kopiujesz przez Ctrl+C.
 - **Repo / repozytorium** — katalog Twojego projektu (zwykle z Gitem).
 
+## 🚀 Roadmap (Plany na przyszłość)
+
+- [x] **Faza 1:** Wersja ratunkowa dla programistów Vercel/Node.js (NPM Nuke, File Copier, Git Auto-Save)
+- [x] **Faza 2:** Skrypt z "osobowością" (System Motywów, Offline Radar, Zombie Scanner, Interaktywne Demo)
+- [x] **Faza 2.5:** Void Project Hub (Zarządzanie ścieżkami projektów i globalny `radar`)
+- [ ] **Faza 3 (Wkrótce):** Void Web Dashboard (Panel w przeglądarce podłączony do terminala, pokazujący aktywne zadania, historię logów i stan projektów)
+- [ ] **Faza 4:** Wsparcie dla WSL2 (Tux radar)
+
+## 🧩 Moduły i Funkcje
+
+### Void Project Hub (Zarządzanie projektami)
+Dzięki wbudowanej, globalnej bazie projektów nie musisz już pamiętać ścieżek!
+* `vp add [nazwa]` - Dodaje obecny folder do radaru pod wybraną nazwą.
+* `vp go [nazwa]` - Natychmiast teleportuje (cd) do projektu i wczytuje Twoje ostatnie zadanie do notatnika na powitanie!
+* `radar` - Renderuje wspaniałą tablicę (stylizowaną według motywu) pokazującą wszystkie Twoje projekty, wykryty Tech Stack oraz to, czy zalega w nich niezapisany na Git kod!
+
+### Skrypty Ratunkowe i Bazy Wiedzy
+* `void` / `help` - Wyświetla panel pomocy ze ściągawką dostępnych komend.
+
 ---
 
 ## 3. Instalacja
