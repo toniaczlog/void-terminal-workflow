@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VoidWorkflow - Ściągawka (Cheatsheet)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        void: {
+                            900: '#0f0f17',
+                            800: '#181824',
+                            700: '#232333',
+                            accent: '#8b5cf6',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'Consolas', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+        
+        body {
+            background-color: #0f0f17;
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .glass-card {
+            background: rgba(24, 24, 36, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-purple-500/30 selection:text-purple-200 min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <!-- Background Effects -->
+    <div class="fixed top-0 right-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
+    <div class="fixed bottom-0 left-0 w-[400px] h-[400px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
+
+    <!-- Navigation -->
+    <nav class="w-full z-50 glass-card border-b-0 border-white/5 py-4">
+        <div class="max-w-6xl mx-auto px-4 flex justify-between items-center">
+            <a href="index.html" class="flex-shrink-0 flex items-center gap-2 hover:opacity-80 transition-opacity">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center">
+                    <i class="fas fa-terminal text-white text-sm"></i>
+                </div>
+                <span class="font-bold text-xl tracking-tight text-white">Void<span class="text-purple-400 font-normal">Docs</span></span>
+            </a>
+            <div class="text-sm font-medium text-gray-400 hidden sm:block">
+                Przypnij tę stronę w zakładkach (Ctrl+D)
+            </div>
+            <a href="index.html" class="flex items-center gap-2 bg-white/10 hover:bg-white/20 border border-white/10 text-white px-4 py-2 rounded-lg transition-all text-sm">
+                <i class="fas fa-home"></i> Wróć do strony głównej
+            </a>
+        </div>
+    </nav>
+
+    <!-- Content -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 py-12 w-full">
+        
+        <div class="mb-10">
+            <h1 class="text-3xl sm:text-4xl font-extrabold mb-4 text-white">Baza Wiedzy (Cheatsheet)</h1>
+            <p class="text-gray-400">Wszystkie magiczne słowa, komendy i skróty, które ułatwiają vibe-coding w jednym miejscu.</p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8">
+            
+            <!-- Tagi do ChatGPT -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-purple-500">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-magic text-purple-400"></i> Tagi dla ChatGPT
+                </h2>
+                <p class="text-sm text-gray-400 mb-6">Wpisuj na samym początku wiadomości na czacie, by zmusić AI do konkretnego zachowania.</p>
+                
+                <div class="space-y-4">
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">TERMINAL:</div>
+                        <p class="text-gray-300 text-sm">Każe wygenerować sam blok komend do skopiowania do konsoli. AI nie będzie niczego tłumaczyć, poda tylko kod i sposób jak sprawdzić czy się udało.</p>
+                    </div>
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">PLIK:</div>
+                        <p class="text-gray-300 text-sm">Otrzymujesz CAŁY kod pliku od góry do dołu. Idealne, gdy AI znowu pisze <em>"wstaw tę linijkę gdzieś na górze"</em>.</p>
+                    </div>
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">HANDOFF:</div>
+                        <p class="text-gray-300 text-sm">Streszcza dzisiejszą pracę nad projektem, byś mógł zaktualizować swój plik `CONTEXT.md`.</p>
+                    </div>
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                        <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">WYJAŚNIJ:</div>
+                        <p class="text-gray-300 text-sm">Odwrotność `TERMINAL:`. Jeśli czegoś nie rozumiesz, AI ma obowiązek wytłumaczyć Ci to jak człowiekowi, używając metafor, BEZ podawania komend.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Skróty w Terminalu -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-blue-500">
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-keyboard text-blue-400"></i> Skróty (PowerShell)
+                </h2>
+                <p class="text-sm text-gray-400 mb-6">Wpisuj w czarnym okienku Windows Terminal (PowerShell).</p>
+                
+                <div class="space-y-6">
+                    <!-- Podstawowe -->
+                    <div>
+                        <h4 class="text-blue-300 font-bold text-sm uppercase tracking-wider mb-3">Podstawowe ułatwienia</h4>
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-blue-400">runc "npm run dev"</code>
+                                <span class="text-sm text-gray-400">Uruchamia komendę i od razu kopiuje wynik do schowka</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-blue-400">tree2</code>
+                                <span class="text-sm text-gray-400">Kopiuje układ Twoich plików do schowka (bez śmieci)</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-blue-400">filec .\plik.txt</code>
+                                <span class="text-sm text-gray-400">Kopiuje ładnie cały plik z nagłówkiem</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Naprawa -->
+                    <div>
+                        <h4 class="text-pink-300 font-bold text-sm uppercase tracking-wider mb-3">Ratunek & Błędy</h4>
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-pink-400">loglast 50</code>
+                                <span class="text-sm text-gray-400">Kopiuje ostatnie 50 linii z konsoli (nawet jak zniknęły!)</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-pink-400">npmnuke</code>
+                                <span class="text-sm text-gray-400">Ultimate Fix: Kasuje node_modules, cache i instaluje od nowa</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Git -->
+                    <div>
+                        <h4 class="text-emerald-300 font-bold text-sm uppercase tracking-wider mb-3">Git i Baza Wiedzy</h4>
+                        <div class="space-y-3">
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-emerald-400">gsave "wiadomosc"</code>
+                                <span class="text-sm text-gray-400">Auto-Zapis (add, commit i push za jednym zamachem)</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-emerald-400">gundo</code>
+                                <span class="text-sm text-gray-400">Cofa zepsutego lokalnego commita (nie rusza plików!)</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-emerald-400">safedeploy</code>
+                                <span class="text-sm text-gray-400">Robi build, a jeśli się zepsuje - od razu kopiuje błąd</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-emerald-400">ctxadd "Zmieniłem API"</code>
+                                <span class="text-sm text-gray-400">Dopisuje notatkę na koniec pliku CONTEXT.md bez jego otwierania</span>
+                            </div>
+                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
+                                <code class="font-mono text-sm font-bold text-emerald-400">cheat vps</code>
+                                <span class="text-sm text-gray-400">Wyświetla w terminalu przypomnienie trudnych komend (vps, npm, git)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                </div>
+            </section>
+        </div>
+        
+        <div class="mt-8 text-center text-gray-500 text-sm">
+            <p>Nie pamiętasz komend w terminalu? Po prostu wpisz w nim: <code class="text-white bg-white/10 px-2 py-1 rounded">void</code> lub <code class="text-white bg-white/10 px-2 py-1 rounded">pomoc</code></p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="border-t border-white/5 py-6 text-center">
+        <p class="text-gray-600 text-xs">VoidWorkflow &copy; 2026. Made for Vibe-Coders.</p>
+    </footer>
+
+</body>
+</html>

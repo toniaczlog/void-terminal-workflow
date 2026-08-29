@@ -78,5 +78,136 @@ function gs  { git status -sb }
 function gl  { git log --oneline -15 }
 function ..  { Set-Location .. }
 
+# --- 4. Zestaw narzędzi Vibe-Coder (Etapy 1-6) -----------------------
+
+# Etap 1: NPM Nuke (czyszczenie cache i node_modules)
+function npmnuke {
+    Write-Host "Czyszczenie projektu zepsutego przez pakiety NPM..." -ForegroundColor Yellow
+    Remove-Item -Recurse -Force node_modules -ErrorAction SilentlyContinue
+    Remove-Item package-lock.json -ErrorAction SilentlyContinue
+    npm cache clean --force
+    npm install
+    Write-Host "Zakończono. Spróbuj teraz uruchomić projekt." -ForegroundColor Green
+}
+
+# Etap 2: Baza komend (cheat, zapamietaj, przypomnij)
+function cheat {
+    param([string]$Topic)
+    if (-not $Topic) {
+        Write-Host "Użycie: cheat <vps|git|npm>"
+        return
+    }
+    switch ($Topic.ToLower()) {
+        "vps" {
+            Write-Host "--- Ściąga: VPS ---" -ForegroundColor Cyan
+            Write-Host "Połączenie:  ssh user@12.34.56.78 -i ~/.ssh/klucz"
+            Write-Host "Kopiowanie:  scp plik.txt user@12.34.56.78:/katalog"
+            Write-Host "Logi PM2:    pm2 logs"
+        }
+        "git" {
+            Write-Host "--- Ściąga: GIT ---" -ForegroundColor Cyan
+            Write-Host "Cofnij zm.:  git checkout -- ."
+            Write-Host "Cofnij com:  gundo (cofa commita, zostawia pliki)"
+            Write-Host "Szybki zap:  gsave 'moj commit'"
+        }
+        "npm" {
+            Write-Host "--- Ściąga: NPM ---" -ForegroundColor Cyan
+            Write-Host "Uruchom:     npm run dev"
+            Write-Host "Instaluj:    npm install paczka"
+            Write-Host "Zresetuj:    npmnuke (nasza funkcja ratunkowa)"
+        }
+        default { Write-Host "Brak ściągi dla: $Topic" -ForegroundColor Red }
+    }
+}
+
+$VoidCmdsFile = "$HOME\.void-cmds.json"
+function zapamietaj {
+    param([Parameter(Mandatory)][string]$Name, [Parameter(Mandatory)][string]$Command)
+    $cmds = @{}
+    if (Test-Path $VoidCmdsFile) { $cmds = Get-Content $VoidCmdsFile | ConvertFrom-Json -AsHashtable }
+    $cmds[$Name] = $Command
+    $cmds | ConvertTo-Json | Set-Content $VoidCmdsFile
+    Write-Host "Zapamiętano komendę '$Name'. Użyj 'przypomnij $Name'." -ForegroundColor Green
+}
+function przypomnij {
+    param([Parameter(Mandatory)][string]$Name)
+    if (-not (Test-Path $VoidCmdsFile)) { Write-Host "Brak zapamiętanych komend." -ForegroundColor Red; return }
+    $cmds = Get-Content $VoidCmdsFile | ConvertFrom-Json -AsHashtable
+    if ($cmds.Contains($Name)) {
+        Write-Host "Wykonuję: $($cmds[$Name])" -ForegroundColor Cyan
+        Invoke-Expression $cmds[$Name]
+    } else {
+        Write-Host "Nie znaleziono komendy o nazwie '$Name'." -ForegroundColor Red
+    }
+}
+
+# Etap 3: Git Auto-Zapis i Gundo
+function gsave {
+    param([Parameter(Mandatory)][string]$Message)
+    git add .
+    git commit -m $Message
+    if ($LASTEXITCODE -ne 0) { Write-Host "Brak zmian lub błąd commita." -ForegroundColor Yellow; return }
+    git push
+    if ($LASTEXITCODE -eq 0) { Write-Host "Sukces! Zmiany na GitHubie." -ForegroundColor Green }
+}
+function gundo {
+    git reset HEAD~1
+    Write-Host "Cofnięto ostatni commit, ale zmiany w plikach pozostały bezpieczne na dysku." -ForegroundColor Green
+}
+
+# Etap 4: Bezpieczny Deploy
+function safedeploy {
+    Write-Host "Budowanie aplikacji (npm run build)..." -ForegroundColor Cyan
+    $out = npm run build 2>&1 | Out-String
+    if ($LASTEXITCODE -eq 0) {
+        Write-Host $out
+        Write-Host "Build poprawny. Trwa deploy..." -ForegroundColor Green
+        # Przykładowy deploy na Vercel (jeśli zainstalowane CLI)
+        vercel --prod
+    } else {
+        Write-Host $out -ForegroundColor Red
+        $out | Set-Clipboard
+        Write-Host "Build ZAKOŃCZONY BŁĘDEM. Treść błędu skopiowano do schowka! Wklej ją w ChatGPT." -ForegroundColor Yellow
+    }
+}
+
+# Etap 5: Szybkie notatki kontekstu
+function ctxadd {
+    param([Parameter(Mandatory)][string]$Note)
+    if (Test-Path ".\CONTEXT.md") {
+        "`n- $(Get-Date -Format 'yyyy-MM-dd'): $Note" | Add-Content ".\CONTEXT.md"
+        Write-Host "Notatka dodana do CONTEXT.md" -ForegroundColor Green
+    } else {
+        Write-Host "Brak pliku CONTEXT.md w tym folderze." -ForegroundColor Red
+    }
+}
+
+# Etap 6: System Pomocy terminalowej
+function void { pomoc }
+function pomoc {
+    Write-Host ""
+    Write-Host "============ VOID WORKFLOW - SYSTEM POMOCY ============" -ForegroundColor Magenta
+    Write-Host " GIT & ZAPISYWANIE:" -ForegroundColor Cyan
+    Write-Host "  gsave `"text`" - Szybki commit i push"
+    Write-Host "  gundo        - Cofa commita (nie rusza plików)"
+    Write-Host ""
+    Write-Host " RATUNEK & BŁĘDY:" -ForegroundColor Cyan
+    Write-Host "  loglast 50   - Kopiuje ostatnie 50 linii z terminala"
+    Write-Host "  npmnuke      - Resetuje cache NPM i node_modules"
+    Write-Host ""
+    Write-Host " NARZĘDZIA DLA CHATGPT:" -ForegroundColor Cyan
+    Write-Host "  filec plik   - Kopiuje plik z nagłówkiem"
+    Write-Host "  tree2        - Kopiuje drzewo plików (2 poziomy)"
+    Write-Host "  runc `"cmd`"   - Uruchamia cmd i kopiuje wynik"
+    Write-Host "  ctxadd `"...`" - Dopisuje notatkę do CONTEXT.md"
+    Write-Host ""
+    Write-Host " BAZA WIEDZY (Ściągi):" -ForegroundColor Cyan
+    Write-Host "  cheat vps    - Ściąga komend dla VPS (git, npm, itp)"
+    Write-Host "  zapamietaj   - Zapisz długą komendę pod nazwą"
+    Write-Host "  przypomnij   - Uruchom zapisaną komendę"
+    Write-Host "=======================================================" -ForegroundColor Magenta
+    Write-Host ""
+}
+
 Write-Host "Profil załadowany. Log sesji: $LogFile" -ForegroundColor DarkGray
-Write-Host "Skróty: loglast / runc / tree2 / filec / ctx / gs / gl" -ForegroundColor DarkGray
+Write-Host "Wpisz 'void', aby zobaczyć system pomocy ze wszystkimi skrótami." -ForegroundColor Magenta
