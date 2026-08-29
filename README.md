@@ -278,32 +278,40 @@ Gdy taką zobaczysz — przeczytaj komentarz, zanim wkleisz. W razie wątpliwoś
 
 ---
 
-## 8. Roadmapa / Plany rozwoju (Wkrótce)
+## 8. Roadmapa / Plany rozwoju
 
-Zestaw będzie rozbudowywany o kolejne ułatwienia dla początkujących. Oto co planujemy wdrożyć w najbliższym czasie:
+Zestaw jest stale rozbudowywany o ułatwienia dla początkujących.
 
-### Etap 1: Pakiet ratunkowy "NPM Nuke"
-Częsty problem początkujących to "zepsute" pakiety Node.
-Wprowadzimy komendę `npmnuke`, która automatycznie wyczyści projekt (usunie `node_modules`, `package-lock.json`, cache) i zainstaluje zależności na nowo. Ratunek na 90% problemów z NPM.
+### ✅ ZREALIZOWANE: Faza 1 (Szybkie Komendy)
+- **Pakiet ratunkowy "NPM Nuke"** (`npmnuke`)
+- **Magiczne zapisywanie i przypominanie komend** (`cheat`, `zapamietaj`, `przypomnij`)
+- **"Auto-Zapis" dla Gita** (`gsave`, `gundo`)
+- **Bezpieczny Deploy** (`safedeploy`)
+- **Dedykowane Szablony Kontekstowe i Szybkie Notatki** (`ctxadd`)
 
-### Etap 2: Magiczne zapisywanie i przypominanie komend
-Nikt nie pamięta długich komend SSH czy Dockera.
-Wprowadzimy system `cheat vps` (ściągawki wyświetlane w terminalu) oraz aliasy `zapamietaj "nazwa" "komenda"` i `przypomnij "nazwa"`, by budować własną bazę wiedzy bez opuszczania konsoli.
+### 🚧 W TRAKCIE (Faza 2): Vibe-Prompt V2
+Chcemy zamienić zwykły znak zachęty w inteligentne, kolorowe Centrum Dowodzenia, które wykonuje obliczenia w locie po każdym wciśnięciu Enter. Wprowadzimy:
 
-### Etap 3: "Auto-Zapis" dla Gita
-Dla tych, którzy boją się branchy i rebase'ów.
-Wprowadzimy komendę `gsave "wiadomość"`, która wykona za jednym zamachem `add`, `commit` i `push`. Dodamy również `gundo`, które cofnie ostatni lokalny błąd (bez usuwania plików na dysku).
+**Etap 6: Zegar Asystent & Podstawy UI**
+- Znak zachęty, który reaguje na porę dnia i "wita" programistę (np. `🌅 Dzień dobry!`).
+- Przebudowa struktury promptu pod wyświetlanie dodatkowych modułów.
 
-### Etap 4: Bezpieczny Deploy (Vercel)
-Wprowadzimy komendę `safedeploy`. Najpierw wykona ona `npm run build`. Jeśli budowanie się wysypie – automatycznie skopiuje błędy do schowka, aby użytkownik mógł od razu zapytać AI o pomoc. Jeśli się uda – wyśle kod do chmury.
+**Etap 7: "Żółta Karteczka" i Pamięć Projektu**
+- Wyświetlanie ostatniej notatki z `CONTEXT.md` na ekranie konsoli.
+- Komenda `scratch` – tworzenie tymczasowych notatek przyklejonych do promptu.
 
-### Etap 5: Dedykowane Szablony Kontekstowe i Szybkie Notatki
-Zamiast jednego ogólnego `CONTEXT.md`, udostępnimy gotowce (`CONTEXT-VPS.md`, `CONTEXT-NextJS.md`).
-Pojawi się też skrót w terminalu: `ctxadd "zmieniłem port bazy"`, który dopisze notatkę na koniec pliku kontekstu, bez konieczności jego otwierania w edytorze.
+**Etap 8: Inteligentne sensory (Stack, Git, Schowek)**
+- Auto-wykrywanie technologii (np. React, Python) i wyświetlanie ikony.
+- Detekcja "brudnego" Git-a i zmiany koloru ścieżki jako ostrzeżenie.
+- Inteligentny Podgląd Schowka (Clipboard Monitor).
+
+**Etap 9: Health Checks (Ciche skanowanie)**
+- Offline Radar – ostrzeżenie o braku dostępu do internetu (i modeli AI).
+- Strażnik zombiaków – ostrzeżenie przed niepotrzebnie włączonymi, ukrytymi serwerami (procesy node).
 
 ---
 
-### 🚀 Wizja Przyszłości (Po wydaniu V1): Void Web Dashboard
+### 🚀 Wizja Przyszłości (Faza 3): Void Web Dashboard
 Zbudowanie dedykowanej aplikacji webowej (uruchamianej np. przez `npx void-terminal`), która połączy przeglądarkę i lokalny komputer w jedno środowisko graficzne:
 - Wbudowany w przeglądarkę terminal (silnik Xterm.js).
 - Prawdziwe, wielkie graficzne przyciski (np. **"NPM Nuke"**, **"Deploy"**) obok terminala.

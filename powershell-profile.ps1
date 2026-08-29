@@ -200,6 +200,7 @@ function pomoc {
     Write-Host "  tree2        - Kopiuje drzewo plików (2 poziomy)"
     Write-Host "  runc `"cmd`"   - Uruchamia cmd i kopiuje wynik"
     Write-Host "  ctxadd `"...`" - Dopisuje notatkę do CONTEXT.md"
+    Write-Host "  scratch `"...`"- Żółta karteczka w prompcie"
     Write-Host ""
     Write-Host " BAZA WIEDZY (Ściągi):" -ForegroundColor Cyan
     Write-Host "  cheat vps    - Ściąga komend dla VPS (git, npm, itp)"
@@ -210,35 +211,122 @@ function pomoc {
 }
 
 # --- 5. Cybepunkowy, Artystyczny Znak Zachęty (Prompt) ----------------
+
+# Etap 7: Scratchpad
+$global:VibeScratchpad = ""
+function scratch {
+    param([string]$Text)
+    if ($Text -eq "clear") {
+        $global:VibeScratchpad = ""
+        Write-Host "Scratchpad wyczyszczony." -ForegroundColor Green
+    } elseif ($Text) {
+        $global:VibeScratchpad = $Text
+        Write-Host "Zapisano w scratchpadzie." -ForegroundColor Green
+    } else {
+        Write-Host "Użycie: scratch `"notatka`" lub scratch clear"
+    }
+}
+
 function prompt {
     $err = $LASTEXITCODE
     
     # Odstęp od poprzedniej komendy
     Write-Host ""
     
+    # --- Etap 9: Health Checks (Offline Radar) ---
+    try {
+        if (-not [System.Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable()) {
+            Write-Host " ❌ BRAK SIECI (Możesz mieć problem z AI) " -BackgroundColor Red -ForegroundColor White
+        }
+    } catch {}
+
+    # --- Etap 6: Zegar Asystent ---
+    $now = Get-Date
+    $hour = $now.Hour
+    $day = $now.DayOfWeek
+    
+    $greeting = ""
+    if ($day -eq [System.DayOfWeek]::Friday -and $hour -ge 16) {
+        $greeting = "🎉 Piąteczek! Czas na deploy"
+    } elseif ($hour -ge 5 -and $hour -lt 10) {
+        $greeting = "🌅 Dzień dobry"
+    } elseif ($hour -ge 10 -and $hour -lt 18) {
+        $greeting = "☕ Środek dnia"
+    } elseif ($hour -ge 18 -and $hour -lt 23) {
+        $greeting = "🌙 Wieczorne kodowanie"
+    } else {
+        $greeting = "🦉 Nocna warta"
+    }
+
     # Górna belka
     Write-Host "╭─[ " -NoNewline -ForegroundColor DarkGray
-    Write-Host "V O I D" -NoNewline -ForegroundColor Magenta
-    Write-Host " ]──[ " -NoNewline -ForegroundColor DarkGray
-    Write-Host (Get-Date -Format 'HH:mm:ss') -NoNewline -ForegroundColor DarkCyan
+    Write-Host "$greeting, $($now.ToString('HH:mm'))" -NoNewline -ForegroundColor DarkCyan
     Write-Host " ]" -NoNewline -ForegroundColor DarkGray
     
-    # Pokaż gałąź GIT jeśli jesteśmy w repo
+    # --- Etap 8: Inteligentne sensory (Stack) ---
+    $stack = @()
+    if (Test-Path "package.json") { $stack += "⚛️ Node" }
+    if (Test-Path "docker-compose.yml") { $stack += "🐳 Docker" }
+    if (Test-Path "main.py" -or Test-Path "requirements.txt") { $stack += "🐍 Python" }
+    if ($stack.Count -gt 0) {
+        Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
+        Write-Host ($stack -join ", ") -NoNewline -ForegroundColor Cyan
+        Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+    }
+
+    # Pokaż gałąź GIT (i brudny status)
     if (Get-Command git -ErrorAction SilentlyContinue) {
         $gitBranch = git branch --show-current 2>$null
         if ($gitBranch) {
+            $gitStatus = git status --porcelain 2>$null
+            $gitColor = if ($gitStatus) { "Red" } else { "Yellow" }
+            $dirtyStar = if ($gitStatus) { "*" } else { "" }
+            
             Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-            Write-Host "git: $gitBranch" -NoNewline -ForegroundColor Yellow
+            Write-Host "git: $gitBranch$dirtyStar" -NoNewline -ForegroundColor $gitColor
             Write-Host " ]" -NoNewline -ForegroundColor DarkGray
         }
     }
+    
+    # --- Etap 9: Strażnik Zombiaków Node ---
+    $nodeProcs = @(Get-Process node -ErrorAction SilentlyContinue)
+    if ($nodeProcs.Count -gt 0) {
+        Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
+        Write-Host "🧟 $($nodeProcs.Count) Node" -NoNewline -ForegroundColor Magenta
+        Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+    }
+    
     Write-Host ""
     
     # Ścieżka
     Write-Host "├─> " -NoNewline -ForegroundColor DarkGray
     Write-Host (Get-Location).Path -NoNewline -ForegroundColor Cyan
+    
+    # --- Etap 7: Ostatnia notatka CONTEXT.md ---
+    if (Test-Path ".\CONTEXT.md") {
+        # Szybki odczyt od tyłu
+        $lastLine = Get-Content ".\CONTEXT.md" -Tail 10 -ErrorAction SilentlyContinue | Where-Object { $_.Trim() -ne "" } | Select-Object -Last 1
+        if ($lastLine) {
+            Write-Host "  📝 $lastLine" -NoNewline -ForegroundColor DarkGray
+        }
+    }
     Write-Host ""
     
+    # --- Etap 8: Podgląd Schowka ---
+    try {
+        $clip = Get-Clipboard -ErrorAction SilentlyContinue
+        if ($clip -is [string] -and $clip.Trim().Length -gt 5) {
+            $clipText = $clip.Trim() -replace "`r", "" -replace "`n", " "
+            if ($clipText.Length -gt 35) { $clipText = $clipText.Substring(0, 35) + "..." }
+            Write-Host "│   📋 W schowku: `"$clipText`"" -ForegroundColor DarkGray
+        }
+    } catch {}
+    
+    # --- Etap 7: Scratchpad ---
+    if ($global:VibeScratchpad) {
+        Write-Host "│   📌 $($global:VibeScratchpad)" -ForegroundColor Yellow
+    }
+
     # Dolna belka z symbolem stanu
     Write-Host "╰─" -NoNewline -ForegroundColor DarkGray
     if ($err -eq 0 -or $err -eq $null) {
