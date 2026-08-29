@@ -209,5 +209,60 @@ function pomoc {
     Write-Host ""
 }
 
-Write-Host "Profil załadowany. Log sesji: $LogFile" -ForegroundColor DarkGray
-Write-Host "Wpisz 'void', aby zobaczyć system pomocy ze wszystkimi skrótami." -ForegroundColor Magenta
+# --- 5. Cybepunkowy, Artystyczny Znak Zachęty (Prompt) ----------------
+function prompt {
+    $err = $LASTEXITCODE
+    
+    # Odstęp od poprzedniej komendy
+    Write-Host ""
+    
+    # Górna belka
+    Write-Host "╭─[ " -NoNewline -ForegroundColor DarkGray
+    Write-Host "V O I D" -NoNewline -ForegroundColor Magenta
+    Write-Host " ]──[ " -NoNewline -ForegroundColor DarkGray
+    Write-Host (Get-Date -Format 'HH:mm:ss') -NoNewline -ForegroundColor DarkCyan
+    Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+    
+    # Pokaż gałąź GIT jeśli jesteśmy w repo
+    if (Get-Command git -ErrorAction SilentlyContinue) {
+        $gitBranch = git branch --show-current 2>$null
+        if ($gitBranch) {
+            Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
+            Write-Host "git: $gitBranch" -NoNewline -ForegroundColor Yellow
+            Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+        }
+    }
+    Write-Host ""
+    
+    # Ścieżka
+    Write-Host "├─> " -NoNewline -ForegroundColor DarkGray
+    Write-Host (Get-Location).Path -NoNewline -ForegroundColor Cyan
+    Write-Host ""
+    
+    # Dolna belka z symbolem stanu
+    Write-Host "╰─" -NoNewline -ForegroundColor DarkGray
+    if ($err -eq 0 -or $err -eq $null) {
+        Write-Host " ⚡ " -NoNewline -ForegroundColor Green
+    } else {
+        Write-Host " ✖ " -NoNewline -ForegroundColor Red
+    }
+    
+    Write-Host "»" -NoNewline -ForegroundColor Magenta
+    return " "
+}
+
+# --- Animowane Powitanie (Wykonuje się tylko raz przy starcie) --------
+Clear-Host
+Write-Host ""
+Write-Host "    __      __  ____    _____  _____  " -ForegroundColor Magenta
+Write-Host "    \ \    / / / __ \  |_   _||  __ \ " -ForegroundColor Magenta
+Write-Host "     \ \  / / | |  | |   | |  | |  | |" -ForegroundColor Magenta
+Write-Host "      \ \/ /  | |  | |   | |  | |  | |" -ForegroundColor Magenta
+Write-Host "       \  /   | |__| |  _| |_ | |__| |" -ForegroundColor Magenta
+Write-Host "        \/     \____/  |_____||_____/ " -ForegroundColor Magenta
+Write-Host ""
+Write-Host "    Zainicjowano profil Vibe-Coder. Logowanie aktywne." -ForegroundColor DarkGray
+Write-Host "    » Wpisz " -NoNewline -ForegroundColor DarkGray
+Write-Host "void" -NoNewline -ForegroundColor Cyan
+Write-Host ", aby otworzyć panel pomocy ze ściągawką." -ForegroundColor DarkGray
+Write-Host ""

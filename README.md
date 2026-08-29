@@ -300,3 +300,12 @@ Wprowadzimy komendę `safedeploy`. Najpierw wykona ona `npm run build`. Jeśli b
 ### Etap 5: Dedykowane Szablony Kontekstowe i Szybkie Notatki
 Zamiast jednego ogólnego `CONTEXT.md`, udostępnimy gotowce (`CONTEXT-VPS.md`, `CONTEXT-NextJS.md`).
 Pojawi się też skrót w terminalu: `ctxadd "zmieniłem port bazy"`, który dopisze notatkę na koniec pliku kontekstu, bez konieczności jego otwierania w edytorze.
+
+---
+
+### 🚀 Wizja Przyszłości (Po wydaniu V1): Void Web Dashboard
+Zbudowanie dedykowanej aplikacji webowej (uruchamianej np. przez `npx void-terminal`), która połączy przeglądarkę i lokalny komputer w jedno środowisko graficzne:
+- Wbudowany w przeglądarkę terminal (silnik Xterm.js).
+- Prawdziwe, wielkie graficzne przyciski (np. **"NPM Nuke"**, **"Deploy"**) obok terminala.
+- Edytor `CONTEXT.md` na żywo w panelu bocznym.
+- Błyskawiczne interakcje bez przepisywania skryptów. Prawdziwe centrum dowodzenia Vibe-Codera!
