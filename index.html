@@ -6,6 +6,9 @@
     <title>Void Terminal Workflow | Vibe-coding bez frustracji</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
+    <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -151,28 +154,7 @@
                             <div class="ml-4 text-xs font-mono text-gray-500 hidden sm:block">Administrator: Windows PowerShell</div>
                             <div class="ml-auto text-xs font-mono text-gray-500 sm:hidden">PowerShell</div>
                         </div>
-                        <div class="p-4 sm:p-6 font-mono text-[11px] sm:text-sm leading-relaxed overflow-x-auto custom-scrollbar whitespace-pre bg-[#0c0c12]">
-<span class="text-fuchsia-500 text-[9px] sm:text-sm leading-tight block mb-2 sm:mb-0">    __      __  ____    _____  _____  
-    \ \    / / / __ \  |_   _||  __ \ 
-     \ \  / / | |  | |   | |  | |  | |
-      \ \/ /  | |  | |   | |  | |  | |
-       \  /   | |__| |  _| |_ | |__| |
-        \/     \____/  |_____||_____/ <span class="text-cyan-400">by toniaczlog</span></span>
-
-<span class="text-gray-500">    Zainicjowano profil Vibe-Coder. Logowanie aktywne.</span>
-<span class="text-gray-500">    » Wpisz </span><span class="text-cyan-400">void</span><span class="text-gray-500">, aby otworzyć panel pomocy ze ściągawką.</span>
-
-<span class="bg-red-600 text-white"> ❌ Houston, odcięło nas od AI! Brak neta. </span>
-
-<span class="text-gray-500">╭─[ </span><span class="text-teal-600">☕ Środek dnia, 14:32</span><span class="text-gray-500"> ]</span>
-<span class="text-gray-500">──[ </span><span class="text-cyan-400">⚛️ O, projekt w Node! | 🐳 Widzę Dockera</span><span class="text-gray-500"> ]</span>
-<span class="text-gray-500">──[ </span><span class="text-red-500">⚠️ Masz niezapisany kod na branchu 'master' (zrób 'gsave')</span><span class="text-gray-500"> ]</span>
-<span class="text-gray-500">──[ </span><span class="text-fuchsia-500">🧟 Znalazłem 2 ukryte procesy Node (może zamulać)</span><span class="text-gray-500"> ]</span>
-<span class="text-gray-500">├─> </span><span class="text-cyan-400">C:\Projekty\MyApp</span>
-<span class="text-gray-500">│   📝 Zmieniłem port bazy na 3306</span>
-<span class="text-gray-500">│   📋 W schowku: "npm ERR! Missing script..."</span>
-<span class="text-yellow-400">│   📌 Zapytać AI o ten niebieski przycisk</span>
-<span class="text-gray-500">╰─</span><span class="text-green-500"> ⚡ </span><span class="text-fuchsia-500">»</span> <span class="animate-pulse">_</span></div>
+                        <div id="terminal-container" class="p-4 sm:p-6 bg-[#0c0c12] w-full" style="height: 450px;"></div>
                     </div>
                 </div>
             </div>
@@ -465,5 +447,178 @@
         </div>
     </footer>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const term = new Terminal({
+        theme: {
+            background: '#0c0c12',
+            foreground: '#d1d5db',
+            cursor: '#d946ef',
+            black: '#000000',
+            red: '#ef4444',
+            green: '#22c55e',
+            yellow: '#eab308',
+            blue: '#3b82f6',
+            magenta: '#d946ef',
+            cyan: '#06b6d4',
+            white: '#ffffff',
+            brightBlack: '#6b7280',
+            brightRed: '#f87171',
+            brightGreen: '#4ade80',
+            brightYellow: '#facc15',
+            brightBlue: '#60a5fa',
+            brightMagenta: '#f472b6',
+            brightCyan: '#22d3ee',
+            brightWhite: '#ffffff'
+        },
+        fontFamily: '"Fira Code", "Consolas", monospace',
+        fontSize: window.innerWidth < 640 ? 10 : 13,
+        cursorBlink: true,
+        convertEol: true
+    });
+
+    const fitAddon = new FitAddon.FitAddon();
+    term.loadAddon(fitAddon);
+    term.open(document.getElementById('terminal-container'));
+    fitAddon.fit();
+
+    window.addEventListener('resize', () => {
+        term.options.fontSize = window.innerWidth < 640 ? 10 : 13;
+        fitAddon.fit();
+    });
+
+    let currentInput = "";
+    let isProcessing = false;
+
+    const writeColor = (text, colorCode) => `\x1b[${colorCode}m${text}\x1b[0m`;
+
+    const printLogo = () => {
+        term.writeln(writeColor("    __      __  ____    _____  _____  ", "35"));
+        term.writeln(writeColor("    \\ \\    / / / __ \\  |_   _||  __ \\ ", "35"));
+        term.writeln(writeColor("     \\ \\  / / | |  | |   | |  | |  | |", "35"));
+        term.writeln(writeColor("      \\ \\/ /  | |  | |   | |  | |  | |", "35"));
+        term.writeln(writeColor("       \\  /   | |__| |  _| |_ | |__| |", "35"));
+        term.write(writeColor("        \\/     \\____/  |_____||_____/ ", "35"));
+        term.writeln(writeColor("by toniaczlog", "36"));
+        term.writeln("");
+        term.writeln(writeColor("    Zainicjowano profil Vibe-Coder. Logowanie aktywne.", "90"));
+        term.write(writeColor("    » Wpisz ", "90"));
+        term.write(writeColor("void", "36"));
+        term.writeln(writeColor(", aby otworzyć panel pomocy ze ściągawką.", "90"));
+        term.writeln("");
+    };
+
+    const printPrompt = () => {
+        term.writeln("");
+        
+        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
+        
+        term.write(writeColor("╭─[ ", "90"));
+        term.write(writeColor(`☕ Środek dnia, ${time}`, "36"));
+        term.writeln(writeColor(" ]", "90"));
+
+        term.write(writeColor("──[ ", "90"));
+        term.write(writeColor("⚛️ O, projekt w Node! | 🐳 Widzę Dockera", "36"));
+        term.writeln(writeColor(" ]", "90"));
+
+        term.write(writeColor("──[ ", "90"));
+        term.write(writeColor("⚠️ Masz niezapisany kod na branchu 'master' (zrób 'gsave')", "31"));
+        term.writeln(writeColor(" ]", "90"));
+
+        term.write(writeColor("├─> ", "90"));
+        term.writeln(writeColor("C:\\Projekty\\MyApp", "36"));
+
+        term.writeln(writeColor("│   📋 W schowku: \"npm ERR! Missing script...\"", "90"));
+        term.writeln(writeColor("│   📌 Zapytać AI o ten niebieski przycisk", "33"));
+
+        term.write(writeColor("╰─", "90"));
+        term.write(writeColor(" ⚡ ", "32"));
+        term.write(writeColor("» ", "35"));
+    };
+
+    const runCommand = async (cmd) => {
+        isProcessing = true;
+        term.writeln("");
+        
+        const args = cmd.trim().split(/\s+/);
+        const command = args[0].toLowerCase();
+
+        switch (command) {
+            case "void":
+            case "help":
+                term.writeln("");
+                term.writeln(writeColor("============ VOID WORKFLOW - SYSTEM POMOCY ============", "35"));
+                term.writeln(writeColor(" GIT & ZAPISYWANIE:", "36"));
+                term.writeln("  gsave \"text\" - Szybki commit i push");
+                term.writeln("  gundo        - Cofa commita");
+                term.writeln("");
+                term.writeln(writeColor(" RATUNEK & BŁĘDY:", "36"));
+                term.writeln("  loglast 50   - Kopiuje logi do schowka");
+                term.writeln("  npmnuke      - Magiczny reset NPM");
+                term.writeln(writeColor("=======================================================", "35"));
+                break;
+            case "npmnuke":
+                term.writeln(writeColor("Czyszczenie projektu zepsutego przez pakiety NPM...", "33"));
+                await new Promise(r => setTimeout(r, 1000));
+                term.writeln(writeColor("Zakończono. Spróbuj teraz uruchomić projekt.", "32"));
+                break;
+            case "gsave":
+                term.writeln("Adding files...");
+                await new Promise(r => setTimeout(r, 400));
+                term.writeln("Committing...");
+                await new Promise(r => setTimeout(r, 400));
+                term.writeln(writeColor("Sukces! Zmiany na GitHubie.", "32"));
+                break;
+            case "clear":
+                term.clear();
+                break;
+            case "random_error":
+                term.writeln(writeColor("FATAL ERROR: Maximum call stack size exceeded", "31"));
+                term.writeln(writeColor("    at /Projekty/MyApp/node_modules/webpack/lib/NormalModuleFactory.js:120:11", "31"));
+                term.writeln(writeColor("    at processTicksAndRejections (node:internal/process/task_queues:96:5)", "31"));
+                term.writeln(writeColor("Spróbuj wpisać komendę loglast aby skopiować ten błąd do AI.", "90"));
+                break;
+            case "loglast":
+                term.writeln(writeColor("Skopiowano ostatnie logi do schowka. Możesz wkleić je w ChatGPT!", "32"));
+                break;
+            case "":
+                break;
+            default:
+                term.writeln(writeColor(`Command not found: ${command}. Wpisz 'void' aby uzyskać pomoc.`, "31"));
+                term.writeln(writeColor(`(Możesz spróbować komendy 'random_error' by wywołać symulację awarii!)`, "90"));
+                break;
+        }
+
+        printPrompt();
+        currentInput = "";
+        isProcessing = false;
+    };
+
+    term.onData(e => {
+        if (isProcessing) return;
+
+        switch (e) {
+            case '\r': // Enter
+                runCommand(currentInput);
+                break;
+            case '\x7F': // Backspace
+                if (currentInput.length > 0) {
+                    currentInput = currentInput.substr(0, currentInput.length - 1);
+                    term.write('\b \b');
+                }
+                break;
+            default:
+                if (e >= String.fromCharCode(0x20) && e <= String.fromCharCode(0x7E) || e >= '\u00a0') {
+                    currentInput += e;
+                    term.write(e);
+                }
+                break;
+        }
+    });
+
+    printLogo();
+    printPrompt();
+});
+</script>
 </body>
 </html>
