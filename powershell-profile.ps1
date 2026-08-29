@@ -1,4 +1,4 @@
-# =====================================================================
+﻿# =====================================================================
 #  Profil PowerShell — logowanie sesji + skróty do pracy z LLM
 #  Instalacja:
 #    1. notepad $PROFILE      # jeśli plik nie istnieje: New-Item -Path $PROFILE -ItemType File -Force
@@ -212,6 +212,167 @@ function pomoc {
 
 # --- 5. Cybepunkowy, Artystyczny Znak Zachęty (Prompt) ----------------
 
+# =====================================================================
+# SYSTEM MOTYWÓW (THEMES)
+# =====================================================================
+$global:VoidConfig = @{
+    Theme = "Colourblocks" # Opcje: Default, QuestLog, Matrix, Magic, Colourblocks
+    EnableZombieScanner = $true
+    EnableOfflineRadar = $true
+}
+
+function Get-VoidTheme {
+    param([string]$ThemeName)
+    $theme = @{}
+    
+    # --- DEFAULT (Asystent) ---
+    $theme.ColorBracket = "DarkGray"
+    $theme.ColorText = "Cyan"
+    $theme.ColorPath = "Cyan"
+    $theme.ColorError = "Red"
+    $theme.ColorSuccess = "Green"
+    $theme.ColorGitDirty = "Red"
+    $theme.ColorGitClean = "Yellow"
+    
+    $theme.PrefixNode = "⚛️ O, projekt w Node!"
+    $theme.PrefixNodeMissing = "📦 (Psst, brakuje node_modules - wpisz 'npm install' lub 'npmnuke')"
+    $theme.PrefixDocker = "🐳 Widzę Dockera"
+    $theme.PrefixPython = "🐍 Pythonowe klimaty"
+    $theme.MsgGitDirty = "⚠️ Masz niezapisany kod na branchu '{0}' (zrób 'gsave')"
+    $theme.MsgZombie = "🧟 Znalazłem {0} ukryte procesy Node (może zamulać)"
+    $theme.MsgOffline = "❌ Houston, odcięło nas od AI! Brak neta."
+    $theme.SymbolOk = " ⚡ "
+    $theme.SymbolErr = " ✖ "
+    $theme.PromptChar = "»"
+    $theme.PromptCharColor = "Magenta"
+    $theme.GreetingMorning = "🌅 Dzień dobry"
+    $theme.GreetingDay = "☕ Środek dnia"
+    $theme.GreetingEvening = "🌙 Wieczorne kodowanie"
+    $theme.GreetingNight = "🦉 Nocna warta"
+    $theme.GreetingFriday = "🎉 Piąteczek! Czas na deploy"
+    $theme.LogoLines = @(
+        "    __      __  ____    _____  _____  ",
+        "    \ \    / / / __ \  |_   _||  __ \ ",
+        "     \ \  / / | |  | |   | |  | |  | |",
+        "      \ \/ /  | |  | |   | |  | |  | |",
+        "       \  /   | |__| |  _| |_ | |__| |",
+        "        \/     \____/  |_____||_____/ "
+    )
+    $theme.LogoColor = "Magenta"
+
+    switch ($ThemeName) {
+        "Matrix" {
+            $theme.ColorBracket = "DarkGreen"
+            $theme.ColorText = "Green"
+            $theme.ColorPath = "Green"
+            $theme.ColorError = "DarkRed"
+            $theme.ColorSuccess = "DarkGreen"
+            $theme.ColorGitDirty = "DarkRed"
+            $theme.ColorGitClean = "DarkGreen"
+            $theme.PrefixNode = "[ MODULE: NODE.JS DETECTED ]"
+            $theme.PrefixNodeMissing = "[ ERROR: NODE_MODULES NOT FOUND ]"
+            $theme.PrefixDocker = "[ MODULE: DOCKER DETECTED ]"
+            $theme.PrefixPython = "[ MODULE: PYTHON DETECTED ]"
+            $theme.MsgGitDirty = "[ WARNING: UNCOMMITTED CHANGES ON '{0}' ]"
+            $theme.MsgZombie = "[ ZOMBIE PROCESS DETECTED: {0} ]"
+            $theme.MsgOffline = "[ CRITICAL: CONNECTION LOST ]"
+            $theme.SymbolOk = " OK "
+            $theme.SymbolErr = " ERR "
+            $theme.PromptChar = ">"
+            $theme.PromptCharColor = "Green"
+            $theme.GreetingMorning = "WAKE UP NEO"
+            $theme.GreetingDay = "SYSTEM ACTIVE"
+            $theme.GreetingEvening = "SYSTEM ACTIVE"
+            $theme.GreetingNight = "FOLLOW THE WHITE RABBIT"
+            $theme.GreetingFriday = "SYSTEM ACTIVE"
+            $theme.LogoLines = @(
+                "    01010110  01001111  01001001  01000100",
+                "    01010110  01001111  01001001  01000100",
+                "    V         O         I         D       "
+            )
+            $theme.LogoColor = "Green"
+        }
+        "QuestLog" {
+            $theme.ColorGitClean = "Cyan"
+            $theme.PrefixNode = "📜 Magiczny Zwój Node.js"
+            $theme.PrefixNodeMissing = "🎒 (Brakuje składników: node_modules)"
+            $theme.PrefixDocker = "⚓ Karczma portowa (Docker)"
+            $theme.PrefixPython = "🐉 Smocze Języki (Python)"
+            $theme.MsgGitDirty = "⚠️ Twój ekwipunek na '{0}' jest niezapisany (użyj gsave)"
+            $theme.MsgZombie = "👾 Ukryte potwory w jaskini: {0}"
+            $theme.MsgOffline = "❌ Brak łączności z Gildią (Brak internetu)"
+            $theme.SymbolOk = " 🛡️ "
+            $theme.SymbolErr = " 💀 "
+            $theme.PromptChar = "⚔️"
+            $theme.PromptCharColor = "Yellow"
+            $theme.GreetingMorning = "🏰 Poranny wypad do lochów"
+            $theme.GreetingDay = "🌞 Słońce w zenicie"
+            $theme.GreetingEvening = "🏕️ Rozbijanie obozu"
+            $theme.GreetingNight = "🦉 Nocna warta"
+            $theme.GreetingFriday = "🍻 Piątek w karczmie!"
+        }
+        "Magic" {
+            $theme.ColorText = "Magenta"
+            $theme.ColorPath = "DarkMagenta"
+            $theme.PrefixNode = "✨ Eliksir Node.js warzy się"
+            $theme.PrefixNodeMissing = "🧪 (Brakuje ingrediencji: node_modules. Rzuć npm install!)"
+            $theme.PrefixDocker = "🏰 Zaklęty Zamek (Docker)"
+            $theme.PrefixPython = "🐍 Język Wężoustych (Python)"
+            $theme.MsgGitDirty = "⚠️ Dementorzy wykradną twój kod z '{0}'! (Rzuć gsave)"
+            $theme.MsgZombie = "👻 Zjawy w zamku: {0}"
+            $theme.MsgOffline = "❌ Wykryto Zaklęcie Wyciszające! Brak łączności."
+            $theme.SymbolOk = " 🪄 "
+            $theme.SymbolErr = " 💥 "
+            $theme.PromptChar = "⚡"
+            $theme.PromptCharColor = "Yellow"
+            $theme.GreetingMorning = "🚂 Ekspres wyrusza"
+            $theme.GreetingDay = "☀️ Słońce nad Hogwartem"
+            $theme.GreetingEvening = "🕯️ Wieczór w Wielkiej Sali"
+            $theme.GreetingNight = "🌌 Nocne spacery po zamku"
+            $theme.GreetingFriday = "🍺 Czas na Kremowe Piwo"
+            $theme.LogoLines = @(
+                "      *    .  *       .             *   ",
+                "   .      _/\_    .      *   .          ",
+                "       *  \  / *       .          .     ",
+                "   .       \/    V O I D   *            ",
+                "      *       .                 *       "
+            )
+            $theme.LogoColor = "Yellow"
+        }
+        "Colourblocks" {
+            $theme.ColorBracket = "Blue"
+            $theme.ColorText = "Magenta"
+            $theme.ColorPath = "Cyan"
+            $theme.ColorGitClean = "DarkCyan"
+            $theme.PrefixNode = "🟣 Purple mówi: To jest Node!"
+            $theme.PrefixNodeMissing = "🟦 Blue płacze: Brakuje klocków node_modules!"
+            $theme.PrefixDocker = "🔵 Deep Blue widzi Dockera!"
+            $theme.PrefixPython = "🟢 Green znalazł Pythona!"
+            $theme.MsgGitDirty = "🔴 Red ostrzega: Zbuduj gsave na '{0}'!"
+            $theme.MsgZombie = "⬛ Czarne klocki zacinają projekt: {0}"
+            $theme.MsgOffline = "🟥 Red krzyczy: Brak Internetu! Klocki się rozpadły!"
+            $theme.SymbolOk = " 🟦 "
+            $theme.SymbolErr = " 🟥 "
+            $theme.PromptChar = "■"
+            $theme.PromptCharColor = "Cyan"
+            $theme.GreetingMorning = "🟨 Yellow wita dzień!"
+            $theme.GreetingDay = "🟧 Orange buduje słońce!"
+            $theme.GreetingEvening = "🟪 Violet maluje wieczór"
+            $theme.GreetingNight = "🌌 Indigo śpiewa kołysankę"
+            $theme.GreetingFriday = "🎉 Wszystkie klocki skaczą!"
+            $theme.LogoLines = @(
+                "    🟥 🟧 🟨 🟩 🟦 🟪 ⬛",
+                "    V  O  I  D",
+                "    ⬛ 🟪 🟦 🟩 🟨 🟧 🟥"
+            )
+            $theme.LogoColor = "White"
+        }
+    }
+    return $theme
+}
+
+# --- 5. Inteligentny Znak Zachęty (Prompt) ----------------
+
 # Etap 7: Scratchpad
 $global:VibeScratchpad = ""
 function scratch {
@@ -229,101 +390,94 @@ function scratch {
 
 function prompt {
     $err = $LASTEXITCODE
+    $theme = Get-VoidTheme -ThemeName $global:VoidConfig.Theme
     
-    # Odstęp od poprzedniej komendy
     Write-Host ""
     
-    # --- Etap 9: Health Checks (Offline Radar) ---
-    try {
-        if (-not [System.Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable()) {
-            Write-Host " ❌ Houston, odcięło nas od AI! Brak neta. " -BackgroundColor Red -ForegroundColor White
-        }
-    } catch {}
+    # --- Health Checks (Offline Radar) ---
+    if ($global:VoidConfig.EnableOfflineRadar) {
+        try {
+            if (-not [System.Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable()) {
+                Write-Host $theme.MsgOffline -BackgroundColor Red -ForegroundColor White
+            }
+        } catch {}
+    }
 
-    # --- Etap 6: Zegar Asystent ---
+    # --- Zegar Asystent ---
     $now = Get-Date
     $hour = $now.Hour
     $day = $now.DayOfWeek
     
     $greeting = ""
-    if ($day -eq [System.DayOfWeek]::Friday -and $hour -ge 16) {
-        $greeting = "🎉 Piąteczek! Czas na deploy"
-    } elseif ($hour -ge 5 -and $hour -lt 10) {
-        $greeting = "🌅 Dzień dobry"
-    } elseif ($hour -ge 10 -and $hour -lt 18) {
-        $greeting = "☕ Środek dnia"
-    } elseif ($hour -ge 18 -and $hour -lt 23) {
-        $greeting = "🌙 Wieczorne kodowanie"
-    } else {
-        $greeting = "🦉 Nocna warta"
-    }
+    if ($day -eq [System.DayOfWeek]::Friday -and $hour -ge 16) { $greeting = $theme.GreetingFriday }
+    elseif ($hour -ge 5 -and $hour -lt 10) { $greeting = $theme.GreetingMorning }
+    elseif ($hour -ge 10 -and $hour -lt 18) { $greeting = $theme.GreetingDay }
+    elseif ($hour -ge 18 -and $hour -lt 23) { $greeting = $theme.GreetingEvening }
+    else { $greeting = $theme.GreetingNight }
 
     # Górna belka
-    Write-Host "╭─[ " -NoNewline -ForegroundColor DarkGray
-    Write-Host "$greeting, $($now.ToString('HH:mm'))" -NoNewline -ForegroundColor DarkCyan
-    Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+    Write-Host "╭─[ " -NoNewline -ForegroundColor $theme.ColorBracket
+    Write-Host "$greeting, $($now.ToString('HH:mm'))" -NoNewline -ForegroundColor $theme.ColorText
+    Write-Host " ]" -NoNewline -ForegroundColor $theme.ColorBracket
     
-    # --- Etap 8: Inteligentne sensory (Stack) ---
+    # --- Sensory (Stack) ---
     $stack = @()
     $hasNodeModules = Test-Path "node_modules"
     
     if (Test-Path "package.json") { 
-        $stack += "⚛️ O, projekt w Node!" 
-        if (-not $hasNodeModules) {
-            $stack += "📦 (Psst, brakuje node_modules - wpisz 'npm install' lub 'npmnuke')"
-        }
+        $stack += $theme.PrefixNode
+        if (-not $hasNodeModules) { $stack += $theme.PrefixNodeMissing }
     }
-    if (Test-Path "docker-compose.yml") { $stack += "🐳 Widzę Dockera" }
-    if (Test-Path "main.py" -or Test-Path "requirements.txt") { $stack += "🐍 Pythonowe klimaty" }
+    if (Test-Path "docker-compose.yml") { $stack += $theme.PrefixDocker }
+    if ((Test-Path "main.py") -or (Test-Path "requirements.txt")) { $stack += $theme.PrefixPython }
     
     if ($stack.Count -gt 0) {
-        Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-        Write-Host ($stack -join " | ") -NoNewline -ForegroundColor Cyan
-        Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+        Write-Host "──[ " -NoNewline -ForegroundColor $theme.ColorBracket
+        Write-Host ($stack -join " | ") -NoNewline -ForegroundColor $theme.ColorText
+        Write-Host " ]" -NoNewline -ForegroundColor $theme.ColorBracket
     }
 
-    # Pokaż gałąź GIT (i brudny status)
+    # Pokaż gałąź GIT
     if (Get-Command git -ErrorAction SilentlyContinue) {
         $gitBranch = git branch --show-current 2>$null
         if ($gitBranch) {
             $gitStatus = git status --porcelain 2>$null
             if ($gitStatus) {
-                Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-                Write-Host "⚠️ Masz niezapisany kod na branchu '$gitBranch' (zrób 'gsave')" -NoNewline -ForegroundColor Red
-                Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+                Write-Host "──[ " -NoNewline -ForegroundColor $theme.ColorBracket
+                Write-Host ($theme.MsgGitDirty -f $gitBranch) -NoNewline -ForegroundColor $theme.ColorGitDirty
+                Write-Host " ]" -NoNewline -ForegroundColor $theme.ColorBracket
             } else {
-                Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-                Write-Host "git: $gitBranch" -NoNewline -ForegroundColor Yellow
-                Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+                Write-Host "──[ " -NoNewline -ForegroundColor $theme.ColorBracket
+                Write-Host "git: $gitBranch" -NoNewline -ForegroundColor $theme.ColorGitClean
+                Write-Host " ]" -NoNewline -ForegroundColor $theme.ColorBracket
             }
         }
     }
     
-    # --- Etap 9: Strażnik Zombiaków Node ---
-    $nodeProcs = @(Get-Process node -ErrorAction SilentlyContinue)
-    if ($nodeProcs.Count -gt 0) {
-        Write-Host "──[ " -NoNewline -ForegroundColor DarkGray
-        Write-Host "🧟 Znalazłem $($nodeProcs.Count) ukryte procesy Node (może zamulać)" -NoNewline -ForegroundColor Magenta
-        Write-Host " ]" -NoNewline -ForegroundColor DarkGray
+    # --- Strażnik Zombiaków ---
+    if ($global:VoidConfig.EnableZombieScanner) {
+        $nodeProcs = @(Get-Process node -ErrorAction SilentlyContinue)
+        if ($nodeProcs.Count -gt 0) {
+            Write-Host "──[ " -NoNewline -ForegroundColor $theme.ColorBracket
+            Write-Host ($theme.MsgZombie -f $nodeProcs.Count) -NoNewline -ForegroundColor $theme.ColorText
+            Write-Host " ]" -NoNewline -ForegroundColor $theme.ColorBracket
+        }
     }
     
     Write-Host ""
     
     # Ścieżka
-    Write-Host "├─> " -NoNewline -ForegroundColor DarkGray
-    Write-Host (Get-Location).Path -NoNewline -ForegroundColor Cyan
+    Write-Host "├─> " -NoNewline -ForegroundColor $theme.ColorBracket
+    Write-Host (Get-Location).Path -NoNewline -ForegroundColor $theme.ColorPath
     
-    # --- Etap 7: Ostatnia notatka CONTEXT.md ---
+    # --- Ostatnia notatka CONTEXT.md ---
     if (Test-Path ".\CONTEXT.md") {
-        # Szybki odczyt od tyłu
         $lastLine = Get-Content ".\CONTEXT.md" -Tail 10 -ErrorAction SilentlyContinue | Where-Object { $_.Trim() -ne "" } | Select-Object -Last 1
-        if ($lastLine) {
-            Write-Host "  📝 $lastLine" -NoNewline -ForegroundColor DarkGray
-        }
+        if ($lastLine) { Write-Host "  📝 $lastLine" -NoNewline -ForegroundColor DarkGray }
     }
     Write-Host ""
     
-    # --- Etap 8: Podgląd Schowka ---
+    # --- Podgląd Schowka ---
     try {
         $clip = Get-Clipboard -ErrorAction SilentlyContinue
         if ($clip -is [string] -and $clip.Trim().Length -gt 5) {
@@ -333,36 +487,34 @@ function prompt {
         }
     } catch {}
     
-    # --- Etap 7: Scratchpad ---
+    # --- Scratchpad ---
     if ($global:VibeScratchpad) {
         Write-Host "│   📌 $($global:VibeScratchpad)" -ForegroundColor Yellow
     }
 
-    # Dolna belka z symbolem stanu
-    Write-Host "╰─" -NoNewline -ForegroundColor DarkGray
+    # Dolna belka
+    Write-Host "╰─" -NoNewline -ForegroundColor $theme.ColorBracket
     if ($err -eq 0 -or $err -eq $null) {
-        Write-Host " ⚡ " -NoNewline -ForegroundColor Green
+        Write-Host $theme.SymbolOk -NoNewline -ForegroundColor $theme.ColorSuccess
     } else {
-        Write-Host " ✖ " -NoNewline -ForegroundColor Red
+        Write-Host $theme.SymbolErr -NoNewline -ForegroundColor $theme.ColorError
     }
     
-    Write-Host "»" -NoNewline -ForegroundColor Magenta
+    Write-Host $theme.PromptChar -NoNewline -ForegroundColor $theme.PromptCharColor
     return " "
 }
 
-# --- Animowane Powitanie (Wykonuje się tylko raz przy starcie) --------
+# --- Animacja Startowa ---
 Clear-Host
+$startTheme = Get-VoidTheme -ThemeName $global:VoidConfig.Theme
 Write-Host ""
-Write-Host "    __      __  ____    _____  _____  " -ForegroundColor Magenta
-Write-Host "    \ \    / / / __ \  |_   _||  __ \ " -ForegroundColor Magenta
-Write-Host "     \ \  / / | |  | |   | |  | |  | |" -ForegroundColor Magenta
-Write-Host "      \ \/ /  | |  | |   | |  | |  | |" -ForegroundColor Magenta
-Write-Host "       \  /   | |__| |  _| |_ | |__| |" -ForegroundColor Magenta
-Write-Host "        \/     \____/  |_____||_____/ " -NoNewline -ForegroundColor Magenta
-Write-Host " by toniaczlog" -ForegroundColor Cyan
+foreach ($line in $startTheme.LogoLines) {
+    Write-Host $line -ForegroundColor $startTheme.LogoColor
+}
+Write-Host "                                   by toniaczlog" -ForegroundColor Cyan
 Write-Host ""
-Write-Host "    Zainicjowano profil Vibe-Coder. Logowanie aktywne." -ForegroundColor DarkGray
+Write-Host "    Aktywny Motyw: $($global:VoidConfig.Theme). Logowanie włączone." -ForegroundColor DarkGray
 Write-Host "    » Wpisz " -NoNewline -ForegroundColor DarkGray
 Write-Host "void" -NoNewline -ForegroundColor Cyan
-Write-Host ", aby otworzyć panel pomocy ze ściągawką." -ForegroundColor DarkGray
+Write-Host ", aby otworzyć pomoc." -ForegroundColor DarkGray
 Write-Host ""
