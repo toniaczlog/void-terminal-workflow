@@ -109,48 +109,49 @@
         </div>
     </nav>
 
-    <!-- Hero Section -->
-    <section class="pt-32 pb-20 sm:pt-40 sm:pb-24 lg:pb-32 px-4 relative text-center">
-        <div class="max-w-4xl mx-auto">
-            <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold uppercase tracking-wide mb-8">
-                <i class="fas fa-magic"></i> Narzędzie dla Vibe-Coderów
-            </div>
-            
-            <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
-                Zbuduj most między przeglądarką<br class="hidden sm:block">
-                a <span class="text-gradient">Twoim komputerem</span>.
-            </h1>
-            
-            <p class="text-lg text-gray-300 max-w-2xl mx-auto mb-10 leading-relaxed">
-                Używaj modeli WWW (ChatGPT, Claude) z własnej subskrypcji. <strong>Bez kluczy API, bez skomplikowanych opłat.</strong> Nasz prosty zestaw łączy czat w przeglądarce z Twoim lokalnym Windows Terminalem.
-            </p>
-            
-            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
-                <a href="#instalacja" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all">
-                    Zainstaluj u siebie (5 min)
-                </a>
-                <a href="#jak-to-dziala" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-void-800 hover:bg-void-700 border border-white/10 text-gray-300 hover:text-white font-medium transition-all">
-                    Zobacz jak to działa
-                </a>
-                <a href="docs.html" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-void-800 hover:bg-void-700 border border-white/10 text-gray-300 hover:text-white font-medium transition-all flex items-center justify-center gap-2">
-                    <i class="fas fa-book text-purple-400"></i> Baza Wiedzy (Ściąga)
-                </a>
-            </div>
-        </div>
-    </section>
-
-    <!-- Terminal Showcase -->
-    <section class="py-8 sm:py-12 relative z-10 -mt-8 sm:-mt-12 mb-4 sm:mb-12">
-        <div class="max-w-4xl mx-auto px-4">
-            <div class="glass-card rounded-xl border border-white/10 overflow-hidden shadow-[0_0_40px_rgba(139,92,246,0.15)] animate-float">
-                <div class="bg-void-900/80 px-4 py-3 border-b border-white/10 flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
-                    <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
-                    <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
-                    <div class="ml-4 text-xs font-mono text-gray-500 hidden sm:block">Administrator: Windows PowerShell</div>
-                    <div class="ml-auto text-xs font-mono text-gray-500 sm:hidden">PowerShell</div>
+    <!-- Hero Section with Terminal -->
+    <section class="pt-32 pb-20 sm:pt-40 sm:pb-24 lg:pb-32 px-4 relative">
+        <div class="max-w-7xl mx-auto">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Text Column (Left) -->
+                <div class="text-center lg:text-left">
+                    <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-300 text-xs font-semibold uppercase tracking-wide mb-8">
+                        <i class="fas fa-magic"></i> Narzędzie dla Vibe-Coderów
+                    </div>
+                    
+                    <h1 class="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight mb-6 leading-tight">
+                        Zbuduj most między przeglądarką<br class="hidden xl:block">
+                        a <span class="text-gradient">komputerem</span>.
+                    </h1>
+                    
+                    <p class="text-lg text-gray-300 max-w-2xl mx-auto lg:mx-0 mb-10 leading-relaxed">
+                        Używaj modeli WWW (ChatGPT, Claude) z własnej subskrypcji. <strong>Bez kluczy API, bez skomplikowanych opłat.</strong> Nasz prosty zestaw łączy czat w przeglądarce z Twoim lokalnym Windows Terminalem.
+                    </p>
+                    
+                    <div class="flex flex-col sm:flex-row justify-center lg:justify-start items-center gap-4">
+                        <a href="#instalacja" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold shadow-[0_0_20px_rgba(139,92,246,0.4)] transition-all text-center">
+                            Zainstaluj u siebie
+                        </a>
+                        <a href="#jak-to-dziala" class="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-void-800 hover:bg-void-700 border border-white/10 text-gray-300 hover:text-white font-medium transition-all text-center">
+                            Zobacz jak działa
+                        </a>
+                        <a href="docs.html" class="w-full sm:w-auto px-4 py-3.5 rounded-xl bg-void-800 hover:bg-void-700 border border-white/10 text-gray-300 hover:text-white font-medium transition-all flex items-center justify-center gap-2" title="Baza Wiedzy (Ściąga)">
+                            <i class="fas fa-book text-purple-400"></i>
+                        </a>
+                    </div>
                 </div>
-                <div class="p-4 sm:p-6 font-mono text-[11px] sm:text-sm leading-relaxed overflow-x-auto custom-scrollbar whitespace-pre bg-[#0c0c12]">
+
+                <!-- Terminal Mockup Column (Right) -->
+                <div class="relative z-10 mt-8 lg:mt-0">
+                    <div class="glass-card rounded-xl border border-white/10 overflow-hidden shadow-[0_0_40px_rgba(139,92,246,0.15)] animate-float">
+                        <div class="bg-void-900/80 px-4 py-3 border-b border-white/10 flex items-center gap-2">
+                            <div class="w-3 h-3 rounded-full bg-red-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500/80"></div>
+                            <div class="ml-4 text-xs font-mono text-gray-500 hidden sm:block">Administrator: Windows PowerShell</div>
+                            <div class="ml-auto text-xs font-mono text-gray-500 sm:hidden">PowerShell</div>
+                        </div>
+                        <div class="p-4 sm:p-6 font-mono text-[11px] sm:text-sm leading-relaxed overflow-x-auto custom-scrollbar whitespace-pre bg-[#0c0c12]">
 <span class="text-fuchsia-500 text-[9px] sm:text-sm leading-tight block mb-2 sm:mb-0">    __      __  ____    _____  _____  
     \ \    / / / __ \  |_   _||  __ \ 
      \ \  / / | |  | |   | |  | |  | |
@@ -175,6 +176,8 @@
 <span class="text-gray-500">╭─[ </span><span class="text-fuchsia-500">V O I D</span><span class="text-gray-500"> ]──[ </span><span class="text-teal-600">14:32:45</span><span class="text-gray-500"> ]──[ </span><span class="text-yellow-400">git: master</span><span class="text-gray-500"> ]</span>
 <span class="text-gray-500">├─> </span><span class="text-cyan-400">C:\Projekty\MyApp</span>
 <span class="text-gray-500">╰─</span><span class="text-green-500"> ⚡ </span><span class="text-fuchsia-500">»</span> <span class="animate-pulse">_</span></div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
