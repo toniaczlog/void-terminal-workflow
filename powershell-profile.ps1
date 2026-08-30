@@ -229,6 +229,8 @@ $global:VoidConfig = @{
     Theme = "Colourblocks" # Opcje: Default, QuestLog, Matrix, Magic, Colourblocks
     EnableZombieScanner = $true
     EnableOfflineRadar = $true
+    EnableAutoBrowser = $true
+    AiUrl = "https://chatgpt.com/"
 }
 
 function Get-VoidTheme {

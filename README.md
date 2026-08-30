@@ -309,42 +309,39 @@ Gdy taką zobaczysz — przeczytaj komentarz, zanim wkleisz. W razie wątpliwoś
 
 ---
 
-## 8. Roadmapa / Plany rozwoju
-
-Zestaw jest stale rozbudowywany o ułatwienia dla początkujących.
-
-### ✅ ZREALIZOWANE: Faza 1 (Szybkie Komendy)
-- **Pakiet ratunkowy "NPM Nuke"** (`npmnuke`)
-- **Magiczne zapisywanie i przypominanie komend** (`cheat`, `zapamietaj`, `przypomnij`)
-- **"Auto-Zapis" dla Gita** (`gsave`, `gundo`)
-- **Bezpieczny Deploy** (`safedeploy`)
-- **Dedykowane Szablony Kontekstowe i Szybkie Notatki** (`ctxadd`)
-
-### 🚧 W TRAKCIE (Faza 2): Vibe-Prompt V2
-Chcemy zamienić zwykły znak zachęty w inteligentne, kolorowe Centrum Dowodzenia, które wykonuje obliczenia w locie po każdym wciśnięciu Enter. Wprowadzimy:
-
-**Etap 6: Zegar Asystent & Podstawy UI**
-- Znak zachęty, który reaguje na porę dnia i "wita" programistę (np. `🌅 Dzień dobry!`).
-- Przebudowa struktury promptu pod wyświetlanie dodatkowych modułów.
-
-**Etap 7: "Żółta Karteczka" i Pamięć Projektu**
-- Wyświetlanie ostatniej notatki z `CONTEXT.md` na ekranie konsoli.
-- Komenda `scratch` – tworzenie tymczasowych notatek przyklejonych do promptu.
-
-**Etap 8: Inteligentne sensory (Stack, Git, Schowek)**
-- Auto-wykrywanie technologii (np. React, Python) i wyświetlanie ikony.
-- Detekcja "brudnego" Git-a i zmiany koloru ścieżki jako ostrzeżenie.
-- Inteligentny Podgląd Schowka (Clipboard Monitor).
-
-**Etap 9: Health Checks (Ciche skanowanie)**
-- Offline Radar – ostrzeżenie o braku dostępu do internetu (i modeli AI).
-- Strażnik zombiaków – ostrzeżenie przed niepotrzebnie włączonymi, ukrytymi serwerami (procesy node).
 
 ---
 
-### 🚀 Wizja Przyszłości (Faza 3): Void Web Dashboard
-Zbudowanie dedykowanej aplikacji webowej (uruchamianej np. przez `npx void-terminal`), która połączy przeglądarkę i lokalny komputer w jedno środowisko graficzne:
-- Wbudowany w przeglądarkę terminal (silnik Xterm.js).
-- Prawdziwe, wielkie graficzne przyciski (np. **"NPM Nuke"**, **"Deploy"**) obok terminala.
-- Edytor `CONTEXT.md` na żywo w panelu bocznym.
-- Błyskawiczne interakcje bez przepisywania skryptów. Prawdziwe centrum dowodzenia Vibe-Codera!
+## 🔮 Void Workflow V4: Pełen Zestaw Vibe-Codera
+
+Narzędzie jest zorganizowane wokół 5 filarów.
+
+### 🧠 Kontekst i Pamięć AI
+- **`init-ctx`** - Tworzy pusty plik `CONTEXT.md` gotowy do wypełnienia celami.
+- **`ctxadd "Notatka"`** - Szybkie dodawanie nowej linii do pliku pamięci AI z terminala.
+- **`onboard`** - Zrzuca całą strukturę plików + `CONTEXT.md` i ładuje do pamięci AI.
+- **`ctx-map`** - Skupia się na mapie projektu dla AI (architektura plików bez opisów).
+
+### 🛸 Terminal HUD i Ostrzeżenia
+- **Podwójny Pasek:** Na bieżąco śledzi użycie CPU `▃▅▇`, Baterię, Git Branch oraz Czas Wykonywania komend!
+- **Alarm Git:** Czerwony migający alarm, jeśli przypadkiem kodujesz wprost na `master` / `main`.
+- **Offline Radar & Zombie Scanner:** Wyłapywanie procesów `node` zamulających sprzęt oraz brak łączności z siecią.
+- **Faza Księżyca 🌕:** Wyliczana z UNIX Timestamp przy starcie konsoli - dowiadujesz się kiedy pełnia.
+
+### ⚡ Vibe-Coding (AI Skróty)
+*Jeżeli zaznaczysz Auto-Otwieranie w Instalatorze, po każdej komendzie terminal sam uruchomi Ci kartę z ChatGPT!*
+- **`vibe-review`** - Zbiera zmiany (git diff) i kopiuje z poleceniem zrobienia brutalnego, ostrego Code Review.
+- **`explain plik.js`** - Obejmuje cały plik, ładuje do AI z nakazem wytłumaczenia go krok po kroku.
+- **`doc-gen folder`** - Przeszukuje kod i tworzy polecenie napisania README do tego modułu.
+- **`mock-data "użytkownicy"`** - Skrót, po którym AI generuje 50 rekordów w czystym, gotowym formacie JSON.
+
+### 🚑 Ratunek i Zapis
+- **`gsave "Wiadomość"`** - Szybki add, commit, push. **(Dodatkowo sprawdza, czy odhaczyłeś cel w `CONTEXT.md`. Jeśli tak - wystrzeliwuje fajerwerki! 🌟)**
+- **`gundo`** - Cofa ostatni, pomyłkowy lokalny commit (soft).
+- **`wtf`** - Łapie ostatni potężny, czerwony błąd z terminala, zawija go w elegancki format markdown i prosi AI o solucję.
+- **`npmnuke`** - Absolutna opcja nuklearna. Kasuje `node_modules` i locki w 2 sekundy (nawet dla folderów zagnieżdżonych głęboko) i instaluje czystą paczkę.
+
+### 🕹️ Styl Życia
+- **`brb`** - Wychodzisz na kawę? Uruchamia spadający kod a'la Matrix, blokując terminal przed wścibskimi.
+- **`rage-quit`** - Kiedy masz dość. Zapisuje to co masz komiksem "WIP", po czym wyrzuca na pulpit.
+- **`todo`** - Mini lista wprost nad kodem (add, done, rm).
