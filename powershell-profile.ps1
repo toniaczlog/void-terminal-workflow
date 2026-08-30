@@ -715,6 +715,30 @@ function brb {
 
 Set-Alias whoops gundo
 Set-Alias undo gundo
+
+function init-ctx {
+    if (Test-Path ".\CONTEXT.md") {
+        Write-Host "CONTEXT.md już istnieje!" -ForegroundColor Yellow
+        return
+    }
+    $template = @"
+# Kontekst Projektu
+Pamięć dla AI. Model używa tego pliku, aby zrozumieć nad czym pracujemy.
+
+## Cel Projektu
+(opisz w 2 zdaniach)
+
+## Tech Stack
+- 
+- 
+
+## Roadmap / Aktualne zadania
+- [ ] 
+"@
+    $template | Set-Content ".\CONTEXT.md" -Encoding UTF8
+    Write-Host "✅ Utworzono szablon CONTEXT.md!" -ForegroundColor Green
+}
+
 function prompt {
     $err = $LASTEXITCODE
     $theme = Get-VoidTheme -ThemeName $global:VoidConfig.Theme
@@ -853,6 +877,13 @@ function prompt {
     if ($stack.Count -gt 0) {
         Write-Host " ($($stack -join ', '))" -ForegroundColor $theme.ColorBracket
     } else { Write-Host "" }
+
+    if (-not (Test-Path ".\CONTEXT.md")) {
+        Write-Host "│   ⚠️ Brak pliku CONTEXT.md (wpisz 'init-ctx' aby stworzyć)" -ForegroundColor DarkYellow
+    } else {
+        $lastLine = Get-Content ".\CONTEXT.md" -Tail 10 -ErrorAction SilentlyContinue | Where-Object { $_.Trim() -ne "" } | Select-Object -Last 1
+        if ($lastLine) { Write-Host "│   📝 Ost: $lastLine" -ForegroundColor DarkGray }
+    }
 
     # BOTTOM BAR
     Write-Host "╰─[ $moonIcon Pełnia za $daysToFull dni ]$spaceStr$todoStr$clipStr──[ 💡 $tip ]" -ForegroundColor $theme.ColorBracket

@@ -557,9 +557,9 @@
                 <div class="glass-card p-6 rounded-2xl">
                     <h3 class="text-xl font-bold text-white mb-2 flex items-center gap-3">
                         <span class="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center text-sm">3</span> 
-                        Zawsze pamiętaj o CONTEXT.md
+                        Zarządzaj kontekstem AI (Automatycznie)
                     </h3>
-                    <p class="text-gray-400 text-sm mb-2 ml-11">W każdym folderze swojego projektu załóż plik <code class="text-white">CONTEXT.md</code> i wklej tam szablon z naszego GitHuba (<code class="text-white">context-template.md</code>). AI będzie korzystać z niego jak z mapy.</p>
+                    <p class="text-gray-400 text-sm mb-2 ml-11">W każdym nowym projekcie wpisz w terminalu komendę <code class="text-white">init-ctx</code>. Jeśli brakuje pliku pamięci (<code>CONTEXT.md</code>), zostanie on wygenerowany z szablonu. Będziesz z niego korzystać jak z mapy dla ChatGPT!</p>
                 </div>
             </div>
         </div>
@@ -645,29 +645,28 @@ document.addEventListener('DOMContentLoaded', () => {
     const printPrompt = () => {
         term.writeln("");
         
-        const time = new Date().toLocaleTimeString('pl-PL', { hour: '2-digit', minute: '2-digit' });
-        
         term.write(writeColor("╭─[ ", "90"));
-        term.write(writeColor(`☕ Środek dnia, ${time}`, "36"));
+        term.write(writeColor("🖥️ CPU: ▃▅▇ 65%", "36"));
+        term.write(writeColor(" ]──[ ", "90"));
+        term.write(writeColor("🚨 MAIN", "31"));
+        term.write(writeColor(" ]──[ ", "90"));
+        term.write(writeColor("⏱️ 12.4s", "36"));
+        term.writeln(writeColor(" ]─╮", "90"));
+
+        term.write(writeColor("│ 📁 C:\\Projekty\\MyApp", "36"));
+        term.write(writeColor(" (⚛️ Node, 🐳 Docker)", "35"));
+        term.writeln("");
+
+        term.write(writeColor("╰─[ ", "90"));
+        term.write(writeColor("🌕 Pełnia za 12 dni", "35"));
+        term.write(writeColor(" ]──[ ", "90"));
+        term.write(writeColor("💾 Wolne: 45GB", "36"));
+        term.write(writeColor(" ]──[ ", "90"));
+        term.write(writeColor("💡 Tip: wpisz 'brb'", "33"));
         term.writeln(writeColor(" ]", "90"));
 
-        term.write(writeColor("──[ ", "90"));
-        term.write(writeColor("⚛️ O, projekt w Node! | 🐳 Widzę Dockera", "36"));
-        term.writeln(writeColor(" ]", "90"));
-
-        term.write(writeColor("──[ ", "90"));
-        term.write(writeColor("⚠️ Masz niezapisany kod na branchu 'master' (zrób 'gsave')", "31"));
-        term.writeln(writeColor(" ]", "90"));
-
-        term.write(writeColor("├─> ", "90"));
-        term.writeln(writeColor("C:\\Projekty\\MyApp", "36"));
-
-        term.writeln(writeColor("│   📋 W schowku: \"npm ERR! Missing script...\"", "90"));
-        term.writeln(writeColor("│   📌 Zapytać AI o ten niebieski przycisk", "33"));
-
-        term.write(writeColor("╰─", "90"));
         term.write(writeColor(" ⚡ ", "32"));
-        term.write(writeColor("» ", "35"));
+        term.write(writeColor("» ", "36"));
         term.scrollToBottom();
     };
 
@@ -707,11 +706,28 @@ document.addEventListener('DOMContentLoaded', () => {
             case "clear":
                 term.clear();
                 break;
+            case "init-ctx":
+                term.writeln(writeColor("Tworzenie szablonu CONTEXT.md...", "33"));
+                await new Promise(r => setTimeout(r, 400));
+                term.writeln(writeColor("✅ Utworzono szablon CONTEXT.md!", "32"));
+                break;
+            case "brb":
+                term.writeln(writeColor("Zaraz wracam... (Wciśnij Ctrl+C aby odblokować)", "32"));
+                break;
+            case "rage-quit":
+                term.writeln(writeColor("(╯°□°）╯︵ ┻━┻", "31"));
+                term.writeln("Wymuszam commit 'WIP - ratunku'...");
+                await new Promise(r => setTimeout(r, 500));
+                term.writeln(writeColor("Terminal zamknięty (w teorii).", "90"));
+                break;
             case "random_error":
                 term.writeln(writeColor("FATAL ERROR: Maximum call stack size exceeded", "31"));
                 term.writeln(writeColor("    at /Projekty/MyApp/node_modules/webpack/lib/NormalModuleFactory.js:120:11", "31"));
                 term.writeln(writeColor("    at processTicksAndRejections (node:internal/process/task_queues:96:5)", "31"));
-                term.writeln(writeColor("Spróbuj wpisać komendę loglast aby skopiować ten błąd do AI.", "90"));
+                term.writeln(writeColor("Spróbuj wpisać komendę wtf aby skopiować ten błąd do AI.", "90"));
+                break;
+            case "wtf":
+                term.writeln(writeColor("✅ Błąd skopiowany z promptem ratunkowym. Wklej do AI!", "32"));
                 break;
             case "loglast":
                 term.writeln(writeColor("Skopiowano ostatnie logi do schowka. Możesz wkleić je w ChatGPT!", "32"));
