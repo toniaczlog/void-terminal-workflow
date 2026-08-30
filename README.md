@@ -41,22 +41,34 @@ Elementy działają osobno. Możesz wdrożyć tylko pierwszy i już będzie lepi
 
 ## 🚀 Roadmap (Plany na przyszłość)
 
-- [x] **Faza 1:** Wersja ratunkowa dla programistów Vercel/Node.js (NPM Nuke, File Copier, Git Auto-Save)
-- [x] **Faza 2:** Skrypt z "osobowością" (System Motywów, Offline Radar, Zombie Scanner, Interaktywne Demo)
+- [x] **Faza 1:** Wersja ratunkowa dla programistów (NPM Nuke, File Copier, Git Auto-Save)
+- [x] **Faza 2:** Skrypt z "osobowością" i motywami (Interaktywne Demo)
 - [x] **Faza 2.5:** Void Project Hub (Zarządzanie ścieżkami projektów i globalny `radar`)
-- [ ] **Faza 3 (Wkrótce):** Void Web Dashboard (Panel w przeglądarce podłączony do terminala, pokazujący aktywne zadania, historię logów i stan projektów)
-- [ ] **Faza 4:** Wsparcie dla WSL2 (Tux radar)
+- [x] **Faza 3:** Architektura V3 HUD & Moduły (Podwójny pasek statusu, księżyc, CPU, 12 nowych komend)
+- [ ] **Faza 4 (Wkrótce):** Void Web Dashboard (Panel w przeglądarce podłączony do terminala)
+- [ ] **Faza 5:** Wsparcie dla WSL2 (Tux radar)
 
 ## 🧩 Moduły i Funkcje
 
-### Void Project Hub (Zarządzanie projektami)
-Dzięki wbudowanej, globalnej bazie projektów nie musisz już pamiętać ścieżek!
-* `vp add [nazwa]` - Dodaje obecny folder do radaru pod wybraną nazwą.
-* `vp go [nazwa]` - Natychmiast teleportuje (cd) do projektu i wczytuje Twoje ostatnie zadanie do notatnika na powitanie!
-* `radar` - Renderuje wspaniałą tablicę (stylizowaną według motywu) pokazującą wszystkie Twoje projekty, wykryty Tech Stack oraz to, czy zalega w nich niezapisany na Git kod!
+### Interfejs HUD (V3)
+Terminal posiada teraz podwójny pasek statusu (Górna i Dolna belka). W zależności od wybranego Vibe'u, informują one o aktualnej fazie księżyca, procesorze, odtwarzanej muzyce (w oknie PC), statusie Git i niezapisanym kodzie. W przypadku bycia na gałęzi `main`/`master` zapali się czerwony alarm produkcyjny!
 
-### Skrypty Ratunkowe i Bazy Wiedzy
-* `void` / `help` - Wyświetla panel pomocy ze ściągawką dostępnych komend.
+### Void Project Hub (Zarządzanie projektami)
+* `vp add [nazwa]` - Dodaje obecny folder do radaru pod wybraną nazwą.
+* `vp go [nazwa]` - Natychmiast teleportuje (cd) do projektu i wczytuje Twoje ostatnie zadanie!
+* `radar` - Renderuje tablicę pokazującą wszystkie Twoje projekty, wykryty Tech Stack oraz status Gita.
+
+### Mega-Narzędzia AI & Ratunkowe
+Wpisz w terminalu `void`, aby zobaczyć pełną pomoc. Oto najważniejsze nowości:
+* `wtf` - Kopiuje z promptem dla AI ostatni wyrzucony w konsoli błąd.
+* `onboard` - Skanuje strukturę projektu i package.json do jednego Mega-Promptu dla nowej rozmowy.
+* `review` - Pakuje obecnego git diff w prompt o Code Review.
+* `todo` - Szybki system zarządzania zadaniami w konsoli (`todo add`, `todo done`). Aktywne zadanie wyświetli się na pasku HUD!
+* `clean-space` - Czyści projekt z `node_modules` i innych śmieci odzyskując gigabajty miejsca.
+* `snapshot` - Wykonuje lekki backup ZIP Twojego projektu z pominięciem śmieci, w ułamku sekundy.
+* `qr-link 3000` - Generuje ASCII kod QR z Twoim lokalnym IP do testowania apki na telefonie.
+* `brb` - Zablokuj ekran terminala Matrixowym wygaszaczem (Zaraz Wracam).
+* `rage-quit` - Wymusza szybki zapis Gita (WIP), rzuca stołem w ASCII i zamyka terminal.
 
 ---
 
