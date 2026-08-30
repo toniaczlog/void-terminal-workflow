@@ -807,25 +807,13 @@ function prompt {
     # GROMADZENIE DANYCH DO BOTTOM BARA
     # ---------------------------------------------
     
-    # 1. Faza księżyca
-    $knownFullMoon = [datetime]"2024-01-25 17:54:00"
-    $daysSince = (Get-Date) - $knownFullMoon
-    $cycles = $daysSince.TotalDays / 29.53058770576
-    $cyclePos = $cycles - [math]::Truncate($cycles)
-    $daysToFull = [math]::Round((1 - $cyclePos) * 29.53)
-    $moonIcon = "🌕"
-    if ($cyclePos -lt 0.1 -or $cyclePos -gt 0.9) { $moonIcon = "🌕" }
-    elseif ($cyclePos -lt 0.4) { $moonIcon = "🌘" }
-    elseif ($cyclePos -lt 0.6) { $moonIcon = "🌑" }
-    else { $moonIcon = "🌓" }
-    if ($daysToFull -eq 29 -or $daysToFull -eq 30) { $daysToFull = 0 }
     
     # 2. Wolne miejsce
     $drive = (Get-Location).Drive.Name
     $spaceStr = ""
     if ($drive) {
         $vol = Get-Volume -DriveLetter $drive -ErrorAction SilentlyContinue
-        if ($vol) { $spaceStr = "──[ 💾 Wolne: $([math]::Round($vol.SizeRemaining / 1GB))GB ]" }
+        if ($vol) { $spaceStr = "─[ 💾 Wolne: $([math]::Round($vol.SizeRemaining / 1GB))GB ]" }
     }
     
     # 3. TODO
@@ -886,7 +874,7 @@ function prompt {
     }
 
     # BOTTOM BAR
-    Write-Host "╰─[ $moonIcon Pełnia za $daysToFull dni ]$spaceStr$todoStr$clipStr──[ 💡 $tip ]" -ForegroundColor $theme.ColorBracket
+    Write-Host "╰─$spaceStr$todoStr$clipStr──[ 💡 $tip ]" -ForegroundColor $theme.ColorBracket
     
     # OFFLINE / ZOMBIE / SCHRATCH
     if ($global:VoidConfig.EnableOfflineRadar) {
@@ -922,7 +910,23 @@ foreach ($line in $startTheme.LogoLines) {
 }
 Write-Host "                                   by toniaczlog" -ForegroundColor Cyan
 Write-Host ""
+
+# 1. Faza księżyca
+$knownFullMoon = [datetime]"2024-01-25 17:54:00"
+$daysSince = (Get-Date) - $knownFullMoon
+$cycles = $daysSince.TotalDays / 29.53058770576
+$cyclePos = $cycles - [math]::Truncate($cycles)
+$daysToFull = [math]::Round((1 - $cyclePos) * 29.53)
+$moonIcon = "🌕"
+if ($cyclePos -lt 0.1 -or $cyclePos -gt 0.9) { $moonIcon = "🌕" }
+elseif ($cyclePos -lt 0.4) { $moonIcon = "🌘" }
+elseif ($cyclePos -lt 0.6) { $moonIcon = "🌑" }
+else { $moonIcon = "🌓" }
+if ($daysToFull -eq 29 -or $daysToFull -eq 30) { $daysToFull = 0 }
+
 Write-Host "    Aktywny Motyw: $($global:VoidConfig.Theme). Logowanie włączone." -ForegroundColor DarkGray
+Write-Host "    $moonIcon Zbliża się pełnia (za $daysToFull dni). Wycie do księżyca dozwolone." -ForegroundColor DarkGray
+
 Write-Host "    » Wpisz " -NoNewline -ForegroundColor DarkGray
 Write-Host "void" -NoNewline -ForegroundColor Cyan
 Write-Host ", aby otworzyć pomoc." -ForegroundColor DarkGray
