@@ -398,6 +398,16 @@
                                         <input type="checkbox" id="gen-zombie" checked class="w-3 h-3 text-purple-500 bg-void-900 border-white/10 rounded focus:ring-purple-500 accent-purple-500">
                                         <label for="gen-zombie" class="ml-2 text-xs text-gray-300">Zombie Scanner</label>
                                     </div>
+                                      <div class="flex items-center mt-2">
+                                          <input type="checkbox" id="gen-browser" checked class="w-3 h-3 text-purple-500 bg-void-900 border-white/10 rounded focus:ring-purple-500 accent-purple-500">
+                                          <label for="gen-browser" class="ml-2 text-xs text-gray-300">Auto-Otwieranie AI</label>
+                                      </div>
+                                      <div class="mt-2 ml-5">
+                                          <select id="gen-browser-url" class="w-full bg-[#0c0c12] border border-white/10 rounded p-1 text-[10px] text-gray-400 focus:border-purple-500 focus:outline-none appearance-none">
+                                              <option value="https://chatgpt.com/">Używaj ChatGPT</option>
+                                              <option value="https://claude.ai/">Używaj Claude</option>
+                                          </select>
+                                      </div>
                                 </div>
                                 <button onclick="generateScript()" class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold py-2 px-4 rounded text-sm transition-all shadow-lg shadow-purple-500/25">
                                     Wygeneruj Kod
