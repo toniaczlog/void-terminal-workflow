@@ -148,7 +148,21 @@ function gsave {
     git commit -m $Message
     if ($LASTEXITCODE -ne 0) { Write-Host "Brak zmian lub błąd commita." -ForegroundColor Yellow; return }
     git push
-    if ($LASTEXITCODE -eq 0) { Write-Host "Sukces! Zmiany na GitHubie." -ForegroundColor Green }
+    if ($LASTEXITCODE -ne 0) { return }
+    Write-Host "Sukces! Zmiany na GitHubie." -ForegroundColor Green
+
+    # Czy ten commit domyka zadanie z roadmapy w CONTEXT.md?
+    $open = Get-VoidRoadmap
+    if ($open.Count -eq 0) { return }
+    $words = ($Message -split '\W+') | Where-Object { $_.Length -gt 3 }
+    foreach ($task in $open) {
+        $hit = $words | Where-Object { $task -match [regex]::Escape($_) } | Select-Object -First 1
+        if ($hit) {
+            Show-VoidFireworks -Message "Commit domyka zadanie: $task"
+            Write-Host "  Odhacz je w pamięci projektu: ctx-done `"$task`"" -ForegroundColor DarkGray
+            break
+        }
+    }
 }
 function gundo {
     git reset HEAD~1
@@ -188,9 +202,17 @@ function pomoc {
     Write-Host ""
     Write-Host "============ VOID WORKFLOW - SYSTEM POMOCY ============" -ForegroundColor Magenta
     Write-Host " GIT & ZAPISYWANIE:" -ForegroundColor Cyan
-    Write-Host "  gsave `"text`" - Szybki commit i push"
+    Write-Host "  gsave `"text`" - Szybki commit i push (+ fajerwerki za zadanie z roadmapy)"
+    Write-Host "  ctx-repo     - Zakłada repo na GitHubie i wpisuje adres do CONTEXT.md"
     Write-Host "  undo / whoops- Cofa commita (nie rusza plików)"
     Write-Host "  snapshot     - Szybki backup projektu do ZIP"
+    Write-Host ""
+    Write-Host " KONTEKST AI (CONTEXT.md):" -ForegroundColor Cyan
+    Write-Host "  init-ctx     - Tworzy szablon pamięci projektu"
+    Write-Host "  ctx          - Otwiera CONTEXT.md w edytorze"
+    Write-Host "  ctxadd `"txt`" - Dopisuje datowaną notatkę"
+    Write-Host "  ctx-done `"x`" - Odhacza zadanie w roadmapie"
+    Write-Host "  ctx-map      - Mapa architektury i zależności dla AI"
     Write-Host ""
     Write-Host " RATUNEK & BŁĘDY:" -ForegroundColor Cyan
     Write-Host "  wtf          - Kopiuje ostatni błąd do promptu dla AI"
@@ -201,6 +223,10 @@ function pomoc {
     Write-Host ""
     Write-Host " NARZĘDZIA DLA CHATGPT:" -ForegroundColor Cyan
     Write-Host "  onboard      - Generuje Mega-Prompt ze strukturą projektu"
+    Write-Host "  vibe-review  - Diff + prośba o brutalne code review"
+    Write-Host "  explain plik - Prosi AI o wyjaśnienie kodu linijka po linijce"
+    Write-Host "  doc-gen      - Prompt na kompletne README.md"
+    Write-Host "  mock-data    - Prompt na realistyczne dane testowe JSON"
     Write-Host "  review       - Pobiera zmiany (diff) z promptem code review"
     Write-Host "  filec plik   - Kopiuje plik z nagłówkiem"
     Write-Host "  tree2        - Kopiuje drzewo plików (2 poziomy)"
@@ -660,10 +686,10 @@ function onboard {
     
     if (Test-Path "package.json") { $out += "`n=== package.json ===`n" + (Get-Content "package.json" -Raw) }
     if (Test-Path "README.md") { $out += "`n=== README.md ===`n" + (Get-Content "README.md" -Raw) }
-    
+    if (Test-Path ".\CONTEXT.md") { $out += "`n=== CONTEXT.md ===`n" + (Get-Content ".\CONTEXT.md" -Raw) }
+
     $promptAI = "Oto struktura mojego projektu i podstawowe pliki. Zapoznaj się z nimi, zanim zadam pierwsze pytanie:`n`n$out"
-    $promptAI | Set-Clipboard
-    Write-Host "✅ Mega-Prompt Inicjalizacyjny skopiowany do schowka!" -ForegroundColor Green
+    Send-VoidPrompt -Prompt $promptAI -Info "Mega-Prompt Inicjalizacyjny skopiowany do schowka!"
 }
 
 function vibe-check {
@@ -731,16 +757,250 @@ Pamięć dla AI. Model używa tego pliku, aby zrozumieć nad czym pracujemy.
 (opisz w 2 zdaniach)
 
 ## Tech Stack
-- 
-- 
+-
+-
+
+## Repozytorium
+(uzupełni się samo po komendzie 'ctx-repo')
 
 ## Roadmap / Aktualne zadania
-- [ ] 
+- [ ]
+
+## Log postępu
+(tutaj lądują wpisy z 'ctxadd' i 'ctx-done')
 "@
     $template | Set-Content ".\CONTEXT.md" -Encoding UTF8
     Write-Host "✅ Utworzono szablon CONTEXT.md!" -ForegroundColor Green
 }
 
+
+# =====================================================================
+# RODZINA CTX - PAMIEC PROJEKTU (CONTEXT.md)
+# =====================================================================
+
+# Wspolny helper dla komend AI: schowek + (opcjonalnie) nowa karta w przegladarce.
+function Send-VoidPrompt {
+    param(
+        [Parameter(Mandatory)][string]$Prompt,
+        [string]$Info = "Prompt skopiowany do schowka!"
+    )
+    $Prompt | Set-Clipboard
+    Write-Host "✅ $Info" -ForegroundColor Green
+    if ($global:VoidConfig.EnableAutoBrowser -and $global:VoidConfig.AiUrl) {
+        try {
+            Start-Process $global:VoidConfig.AiUrl
+            Write-Host "🌐 Otwieram $($global:VoidConfig.AiUrl) - wciśnij Ctrl+V." -ForegroundColor DarkGray
+        } catch {
+            Write-Host "Nie udało się otworzyć przeglądarki (wklej ręcznie)." -ForegroundColor DarkYellow
+        }
+    }
+}
+
+# Krotka animacja nagrody po zamknieciu zadania z roadmapy.
+function Show-VoidFireworks {
+    param([string]$Message = "Zadanie z roadmapy zamknięte!")
+    $colors = @("Magenta", "Cyan", "Yellow", "Green")
+    $frames = @(
+        "         .    *    .         ",
+        "      *   \   |   /   *      ",
+        "   .   --   🎆   --   .      ",
+        "      *   /   |   \   *      "
+    )
+    foreach ($f in $frames) {
+        Write-Host $f -ForegroundColor $colors[(Get-Random -Maximum $colors.Count)]
+        Start-Sleep -Milliseconds 110
+    }
+    Write-Host "  🌟 $Message 🌟`n" -ForegroundColor Green
+}
+
+# Zwraca liste otwartych zadan z sekcji Roadmap w CONTEXT.md.
+function Get-VoidRoadmap {
+    if (-not (Test-Path ".\CONTEXT.md")) { return @() }
+    $open = @()
+    foreach ($line in (Get-Content ".\CONTEXT.md" -ErrorAction SilentlyContinue)) {
+        if ($line -match '^\s*-\s*\[\s\]\s*(.+)$') {
+            $text = $matches[1].Trim()
+            if ($text) { $open += $text }
+        }
+    }
+    return $open
+}
+
+# Odhacza zadanie w Roadmapie: '- [ ]' -> '- [x]' + wpis do logu postepu.
+# Uzycie:  ctx-done "logowanie"
+function ctx-done {
+    param([Parameter(Mandatory)][string]$Task)
+    if (-not (Test-Path ".\CONTEXT.md")) {
+        Write-Host "Brak CONTEXT.md - wpisz 'init-ctx', aby stworzyć pamięć projektu." -ForegroundColor Red
+        return
+    }
+    $lines = @(Get-Content ".\CONTEXT.md")
+    $hit = -1
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        if ($lines[$i] -match '^\s*-\s*\[\s\]' -and $lines[$i] -like "*$Task*") { $hit = $i; break }
+    }
+    if ($hit -lt 0) {
+        Write-Host "Nie znalazłem otwartego zadania pasującego do: $Task" -ForegroundColor Yellow
+        $open = Get-VoidRoadmap
+        if ($open.Count -gt 0) {
+            Write-Host "Otwarte zadania w roadmapie:" -ForegroundColor DarkGray
+            foreach ($o in $open) { Write-Host "  - $o" -ForegroundColor DarkGray }
+        }
+        return
+    }
+    $lines[$hit] = $lines[$hit] -replace '\[\s\]', '[x]'
+    $name = ($lines[$hit] -replace '^\s*-\s*\[x\]\s*', '').Trim()
+    $lines | Set-Content ".\CONTEXT.md" -Encoding UTF8
+    "- $(Get-Date -Format 'yyyy-MM-dd'): ✅ Zrobione - $name" | Add-Content ".\CONTEXT.md" -Encoding UTF8
+    Write-Host "✅ Odhaczono w roadmapie: $name" -ForegroundColor Green
+    Show-VoidFireworks
+}
+
+# Zaklada repozytorium na GitHubie i zapisuje jego adres w CONTEXT.md.
+# Uzycie:  ctx-repo                     (nazwa = nazwa folderu, repo prywatne)
+#          ctx-repo moja-apka public
+function ctx-repo {
+    param(
+        [string]$Name,
+        [ValidateSet("private", "public")][string]$Visibility = "private"
+    )
+    if (-not (Get-Command gh -ErrorAction SilentlyContinue)) {
+        Write-Host "Brak GitHub CLI. Zainstaluj: winget install GitHub.cli, potem 'gh auth login'." -ForegroundColor Red
+        return
+    }
+    if (-not $Name) { $Name = Split-Path -Leaf (Get-Location) }
+
+    if (-not (Test-Path ".git")) {
+        git init | Out-Null
+        git branch -M main
+        Write-Host "📦 Zainicjowano repozytorium lokalne (branch main)." -ForegroundColor Cyan
+    }
+
+    git add . 2>$null
+    git commit -m "init: pierwszy commit z Void Workflow" 2>$null | Out-Null
+
+    Write-Host "🚀 Tworzę repozytorium '$Name' ($Visibility) na GitHubie..." -ForegroundColor Cyan
+    gh repo create $Name "--$Visibility" --source=. --remote=origin --push
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "gh repo create nie powiodło się (repo o tej nazwie już istnieje?)." -ForegroundColor Red
+        return
+    }
+
+    $url = (git remote get-url origin 2>$null)
+    if ($url) { $url = $url.Trim() -replace '\.git$', '' }
+    Write-Host "✅ Repo online: $url" -ForegroundColor Green
+
+    if (Test-Path ".\CONTEXT.md") {
+        $content = Get-Content ".\CONTEXT.md" -Raw
+        if ($content -match '(?m)^##\s*Repozytorium\s*$') {
+            $content = $content -replace '(?m)(^##\s*Repozytorium\s*$)(\r?\n)+[^\r\n]*', "`$1`n$url"
+            $content | Set-Content ".\CONTEXT.md" -Encoding UTF8
+        } else {
+            "`n## Repozytorium`n$url" | Add-Content ".\CONTEXT.md" -Encoding UTF8
+        }
+        Write-Host "📝 Adres repo zapisany w CONTEXT.md - AI wie już, gdzie mieszka projekt." -ForegroundColor Green
+    } else {
+        Write-Host "Wskazówka: wpisz 'init-ctx', by AI dostało też opis projektu." -ForegroundColor DarkYellow
+    }
+}
+
+# Mapa architektury z lotu ptaka: drzewo + zaleznosci + importy -> prompt dla AI.
+function ctx-map {
+    $skip = 'node_modules|\.git|\.next|dist|build|\.venv|__pycache__|coverage'
+    $out = "=== Drzewo projektu (3 poziomy) ===`n"
+    $out += (Get-ChildItem -Recurse -Depth 3 -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch $skip } |
+        ForEach-Object { $_.FullName.Replace((Get-Location).Path, '.') } | Out-String)
+
+    if (Test-Path "package.json") {
+        try {
+            $pkg = Get-Content "package.json" -Raw | ConvertFrom-Json
+            $out += "`n=== Stack i skrypty ===`n"
+            if ($pkg.dependencies)    { $out += "prod: "    + (($pkg.dependencies    | Get-Member -MemberType NoteProperty).Name -join ", ") + "`n" }
+            if ($pkg.devDependencies) { $out += "dev: "     + (($pkg.devDependencies | Get-Member -MemberType NoteProperty).Name -join ", ") + "`n" }
+            if ($pkg.scripts)         { $out += "skrypty: " + (($pkg.scripts         | Get-Member -MemberType NoteProperty).Name -join ", ") + "`n" }
+        } catch {}
+    }
+
+    $srcFiles = Get-ChildItem -Recurse -File -Include *.js, *.jsx, *.ts, *.tsx, *.py -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch $skip } | Select-Object -First 120
+    if ($srcFiles) {
+        $links = @()
+        foreach ($f in $srcFiles) {
+            $rel = $f.FullName.Replace((Get-Location).Path, '.')
+            $hits = Select-String -Path $f.FullName -Pattern 'import .+ from [''"]\.|require\([''"]\.|^\s*from \.' -ErrorAction SilentlyContinue
+            foreach ($h in $hits) { $links += ($rel + "  ->  " + $h.Line.Trim()) }
+        }
+        if ($links.Count -gt 0) {
+            $out += "`n=== Powiązania między plikami (importy lokalne) ===`n"
+            $out += (($links | Select-Object -First 60) -join "`n") + "`n"
+        }
+    }
+
+    if (Test-Path ".\CONTEXT.md") { $out += "`n=== CONTEXT.md ===`n" + (Get-Content ".\CONTEXT.md" -Raw) }
+
+    $promptAI = "Oto mapa mojego projektu: struktura plików, zależności i lokalne importy. " +
+                "Opisz architekturę z lotu ptaka, wskaż moduły które robią za dużo i zaproponuj sensowniejszy podział:`n`n$out"
+    Send-VoidPrompt -Prompt $promptAI -Info "Mapa architektury skopiowana do schowka!"
+}
+
+# =====================================================================
+# KOMENDY AI (Vibe-Coding)
+# =====================================================================
+
+# Code review zmian z gita (diff + kontekst projektu).
+function vibe-review {
+    $diff = git diff 2>$null
+    if (-not $diff) { $diff = git diff --cached 2>$null }
+    if (-not $diff) { $diff = git diff HEAD~1 2>$null }
+    if (-not $diff) { Write-Host "Brak zmian do przeglądu." -ForegroundColor Yellow; return }
+    $ctxInfo = ""
+    if (Test-Path ".\CONTEXT.md") { $ctxInfo = "`n`nKontekst projektu:`n" + (Get-Content ".\CONTEXT.md" -Raw) }
+    $promptAI = "Zrób brutalnie szczere code review poniższych zmian. Wskaż błędy logiczne, luki bezpieczeństwa " +
+                "i miejsca, które za tydzień będą nie do utrzymania. Bez lania wody:`n`n$diff$ctxInfo"
+    Send-VoidPrompt -Prompt $promptAI -Info "Diff z prośbą o code review w schowku!"
+}
+
+# Tlumaczenie pliku linijka po linijce.
+# Uzycie:  explain .\src\app.js
+function explain {
+    param([Parameter(Mandatory)][string]$Path)
+    if (-not (Test-Path $Path)) { Write-Host "Nie ma takiego pliku: $Path" -ForegroundColor Red; return }
+    $code = Get-Content $Path -Raw
+    $promptAI = "Wyjaśnij mi ten plik linijka po linijce, prostym językiem, bez żargonu. " +
+                "Na końcu napisz jednym zdaniem, za co ten plik odpowiada w całej aplikacji.`n`n=== $Path ===`n$code"
+    Send-VoidPrompt -Prompt $promptAI -Info "Kod z prośbą o wyjaśnienie w schowku!"
+}
+
+# Prompt do wygenerowania README.md dla projektu/folderu.
+# Uzycie:  doc-gen .\src
+function doc-gen {
+    param([string]$Path = ".")
+    if (-not (Test-Path $Path)) { Write-Host "Nie ma takiego folderu: $Path" -ForegroundColor Red; return }
+    $skip = 'node_modules|\.git|\.next|dist|build|__pycache__'
+    $root = (Resolve-Path $Path).Path
+    $tree = (Get-ChildItem -Path $Path -Recurse -Depth 2 -ErrorAction SilentlyContinue |
+        Where-Object { $_.FullName -notmatch $skip } |
+        ForEach-Object { $_.FullName.Replace($root, '.') } | Out-String)
+    $extra = ""
+    if (Test-Path "package.json") { $extra += "`n=== package.json ===`n" + (Get-Content "package.json" -Raw) }
+    if (Test-Path ".\CONTEXT.md")  { $extra += "`n=== CONTEXT.md ===`n"   + (Get-Content ".\CONTEXT.md" -Raw) }
+    $promptAI = "Napisz kompletny README.md dla tego projektu: opis, wymagania, instalacja krok po kroku, " +
+                "uruchomienie, struktura folderów i sekcja FAQ. Pisz po polsku, w Markdownie.`n`n=== Struktura ===`n$tree$extra"
+    Send-VoidPrompt -Prompt $promptAI -Info "Prompt na README.md w schowku!"
+}
+
+# Prompt do wygenerowania realistycznych danych testowych.
+# Uzycie:  mock-data "użytkownicy sklepu" 50
+function mock-data {
+    param(
+        [Parameter(Mandatory)][string]$Topic,
+        [int]$Count = 50
+    )
+    $promptAI = "Wygeneruj $Count realistycznych rekordów JSON opisujących: $Topic. " +
+                "Zwróć czystą tablicę JSON (bez komentarzy i bez markdownu), spójne typy pól, polskie dane tam gdzie to naturalne."
+    Send-VoidPrompt -Prompt $promptAI -Info "Prompt na $Count rekordów '$Topic' w schowku!"
+}
 function prompt {
     $err = $LASTEXITCODE
     $theme = Get-VoidTheme -ThemeName $global:VoidConfig.Theme

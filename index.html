@@ -83,6 +83,70 @@
             background: rgba(139, 92, 246, 0.8);
         }
 
+        /* Oś 3 kroków w sekcji CONTEXT.md */
+        .ctx-steps {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            position: relative;
+        }
+        .ctx-steps > li {
+            position: relative;
+            padding-left: 2.75rem;
+            padding-bottom: 1.25rem;
+        }
+        .ctx-steps > li:last-child {
+            padding-bottom: 0;
+        }
+        /* pionowa linia łącząca kroki */
+        .ctx-steps > li:not(:last-child)::before {
+            content: "";
+            position: absolute;
+            left: 0.9375rem;
+            top: 1.75rem;
+            bottom: 0.25rem;
+            width: 1px;
+            background: linear-gradient(to bottom, currentColor, transparent);
+            opacity: 0.35;
+        }
+        /* numerowane kółko */
+        .ctx-steps > li::after {
+            content: counter(ctx-step);
+            counter-increment: ctx-step;
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 9999px;
+            border: 1px solid currentColor;
+            background: rgba(12, 12, 18, 0.9);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        .ctx-steps {
+            counter-reset: ctx-step;
+        }
+        .ctx-terminal {
+            background: #0c0c12;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 0.75rem;
+            overflow: hidden;
+        }
+        .ctx-terminal pre {
+            margin: 0;
+            padding: 0.875rem 1rem;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 0.6875rem;
+            line-height: 1.6;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
         /* Ukrycie paska przewijania w Xterm.js */
         .xterm-viewport::-webkit-scrollbar {
             display: none !important;
@@ -110,6 +174,9 @@
                     <span class="font-bold text-xl tracking-tight text-white">VoidWorkflow</span>
                 </div>
                 <div class="flex items-center gap-4 text-sm font-medium">
+                    <a href="#kontekst" class="hidden sm:block text-gray-300 hover:text-white transition-colors">
+                        CONTEXT.md
+                    </a>
                     <a href="docs.html" class="hidden sm:block text-gray-300 hover:text-white transition-colors">
                         Baza Wiedzy
                     </a>
@@ -206,11 +273,16 @@
                 <div class="glass-card p-6 rounded-2xl border-t-4 border-blue-500">
                     <h3 class="text-xl font-bold text-white mb-4 flex items-center gap-2"><i class="fas fa-brain text-blue-400"></i> Kontekst i Pamięć AI</h3>
                     <ul class="space-y-3 text-sm text-gray-300">
-                        <li><code class="text-blue-300 bg-void-900 px-1 rounded">init-ctx</code> – Generuje pusty szablon CONTEXT.md z planem i tech stackiem.</li>
+                        <li><code class="text-blue-300 bg-void-900 px-1 rounded">init-ctx</code> – Generuje szablon CONTEXT.md z celem, stackiem, roadmapą i logiem.</li>
                         <li><code class="text-blue-300 bg-void-900 px-1 rounded">ctxadd "notatka"</code> – Szybko dopisuje wnioski do pamięci projektu bez edytora.</li>
+                        <li><code class="text-blue-300 bg-void-900 px-1 rounded">ctx-done "zadanie"</code> – Odhacza pozycję w roadmapie i zapisuje datę ukończenia.</li>
+                        <li><code class="text-blue-300 bg-void-900 px-1 rounded">ctx-repo</code> – Zakłada repo na GitHubie i wpisuje jego adres do CONTEXT.md.</li>
                         <li><code class="text-blue-300 bg-void-900 px-1 rounded">onboard</code> – Zrzuca architekturę folderów i CONTEXT.md by wprowadzić nowe AI w projekt.</li>
                         <li><code class="text-blue-300 bg-void-900 px-1 rounded">ctx-map</code> – Tworzy mapę zależności i architekturę z lotu ptaka dla AI.</li>
                     </ul>
+                    <a href="#kontekst" class="inline-flex items-center gap-2 mt-5 text-sm font-medium text-blue-300 hover:text-blue-200 transition-colors">
+                        Zobacz każdą komendę w 3 krokach <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
                 </div>
 
                 <!-- 2. HUD -->
@@ -261,6 +333,427 @@
                 <p class="text-gray-400 text-sm mb-4">Mamy też auto-uruchamianie przeglądarki!</p>
                 <p class="text-gray-500 text-xs">Jeśli to zaznaczysz, Void po każdej komendzie AI (jak <code class="text-white">vibe-review</code>) sam otworzy nową kartę ChatGPT, żebyś mógł tylko wcisnąć Ctrl+V.</p>
             </div>
+        </div>
+    </section>
+
+    <!-- Pamięć projektu: CONTEXT.md krok po kroku -->
+    <section id="kontekst" class="py-24 relative z-10">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+
+            <div class="text-center mb-16">
+                <span class="inline-block font-mono text-xs tracking-widest uppercase text-blue-300 bg-blue-500/10 border border-blue-500/20 px-3 py-1 rounded-full mb-4">CONTEXT.md</span>
+                <h2 class="text-3xl font-bold mb-4">Pamięć projektu, krok po kroku</h2>
+                <p class="text-gray-400 max-w-3xl mx-auto">
+                    AI w przeglądarce zapomina wszystko po zamknięciu karty. <code class="text-white bg-void-900 px-1 rounded">CONTEXT.md</code> to jeden plik w Twoim repo, który tę pamięć odtwarza w kilka sekund.
+                    Poniżej każda komenda z rodziny <code class="text-white bg-void-900 px-1 rounded">ctx</code> rozłożona na trzy kroki — co robi, co zapisuje i co dzięki temu widzisz.
+                </p>
+            </div>
+
+            <!-- ---------- GRUPA 1: FUNDAMENT ---------- -->
+            <div class="flex items-center gap-4 mb-8">
+                <span class="font-mono text-xs text-blue-400 border border-blue-500/30 rounded px-2 py-1">01</span>
+                <h3 class="text-xl font-bold text-white">Fundament: plik pamięci</h3>
+                <div class="h-px flex-grow bg-gradient-to-r from-blue-500/30 to-transparent"></div>
+            </div>
+
+            <div class="space-y-6 mb-20">
+
+                <!-- init-ctx -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-blue-300">init-ctx</code>
+                        <span class="text-white font-semibold">Tworzy plik pamięci projektu</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Jedna komenda w świeżym folderze — i projekt ma miejsce, w którym trzyma swoją tożsamość. Uruchamiasz raz na projekt.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-blue-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Sprawdza, czy plik już jest</h4>
+                                <p class="text-gray-400 text-sm">Jeśli <code class="text-gray-300">CONTEXT.md</code> istnieje w tym folderze, komenda kończy się ostrzeżeniem i <strong>niczego nie nadpisuje</strong>. Twoje notatki są bezpieczne.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Zapisuje szablon w UTF-8</h4>
+                                <p class="text-gray-400 text-sm">Powstaje plik z pięcioma sekcjami: <span class="text-gray-300">Cel Projektu</span>, <span class="text-gray-300">Tech Stack</span>, <span class="text-gray-300">Repozytorium</span>, <span class="text-gray-300">Roadmap</span> (lista <code class="text-gray-300">- [ ]</code>) i <span class="text-gray-300">Log postępu</span>. Polskie znaki działają.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Staje się punktem zaczepienia</h4>
+                                <p class="text-gray-400 text-sm">Reszta komend czyta i pisze właśnie tutaj: <code class="text-gray-300">ctx-done</code> odhacza Roadmap, <code class="text-gray-300">ctx-repo</code> uzupełnia Repozytorium, <code class="text-gray-300">ctxadd</code> dokłada Log postępu.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-blue-300">init-ctx</span>
+<span class="text-green-400">✅ Utworzono szablon CONTEXT.md!</span>
+
+<span class="text-gray-600"># CONTEXT.md</span>
+<span class="text-gray-400"># Kontekst Projektu</span>
+<span class="text-gray-500">Pamięć dla AI. Model używa tego pliku,
+aby zrozumieć nad czym pracujemy.</span>
+
+<span class="text-purple-300">## Cel Projektu</span>
+<span class="text-gray-500">(opisz w 2 zdaniach)</span>
+
+<span class="text-purple-300">## Tech Stack</span>
+<span class="text-gray-500">-</span>
+
+<span class="text-purple-300">## Repozytorium</span>
+<span class="text-gray-500">(uzupełni się samo po komendzie 'ctx-repo')</span>
+
+<span class="text-purple-300">## Roadmap / Aktualne zadania</span>
+<span class="text-gray-500">- [ ]</span>
+
+<span class="text-purple-300">## Log postępu</span>
+<span class="text-gray-500">(tutaj lądują wpisy z 'ctxadd' i 'ctx-done')</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ctx -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-blue-300">ctx</code>
+                        <span class="text-white font-semibold">Otwiera pamięć do ręcznej edycji</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Dwie sekcje musisz napisać sam — Cel Projektu i Tech Stack. Żadna komenda nie zgadnie, co budujesz i dlaczego.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-blue-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Próbuje VS Code</h4>
+                                <p class="text-gray-400 text-sm">Wywołuje <code class="text-gray-300">code .\CONTEXT.md</code> — plik otwiera się w edytorze, w którym i tak pracujesz, bez szukania go w drzewie plików.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Awaryjnie Notatnik</h4>
+                                <p class="text-gray-400 text-sm">Gdy VS Code nie ma w <code class="text-gray-300">PATH</code>, komenda wykrywa błąd i odpala Notatnik. Działa na świeżym Windowsie, bez żadnej konfiguracji.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Uzupełniasz sedno projektu</h4>
+                                <p class="text-gray-400 text-sm">Dwa zdania o celu i lista technologii. To one decydują, czy AI zaproponuje Ci rozwiązanie w Twoim stacku, czy w losowym.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-blue-300">ctx</span>
+<span class="text-gray-500">(otwiera się VS Code z CONTEXT.md)</span>
+
+<span class="text-gray-600"># po Twojej edycji:</span>
+<span class="text-purple-300">## Cel Projektu</span>
+<span class="text-gray-400">Sklep z ceramiką. Zamówienie ma iść
+w trzech kliknięciach, bez rejestracji.</span>
+
+<span class="text-purple-300">## Tech Stack</span>
+<span class="text-gray-400">- React + Vite + Tailwind
+- localStorage, zero backendu
+- deploy: Vercel</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ctxadd -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-blue-300">ctxadd "notatka"</code>
+                        <span class="text-white font-semibold">Dopisuje wniosek bez otwierania edytora</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Decyzja zapada w trakcie kodowania. Jeśli musisz przełączyć okno, żeby ją zapisać — nie zapiszesz jej wcale.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-blue-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Sprawdza bieżący folder</h4>
+                                <p class="text-gray-400 text-sm">Bez <code class="text-gray-300">CONTEXT.md</code> dostajesz czerwony komunikat zamiast cichej porażki. Notatka nigdy nie ląduje w złym projekcie.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Dokleja wpis z datą</h4>
+                                <p class="text-gray-400 text-sm">Na koniec pliku trafia linia <code class="text-gray-300">- RRRR-MM-DD: twoja notatka</code>. Historia decyzji układa się chronologicznie, sama z siebie.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Notatka wraca do Ciebie</h4>
+                                <p class="text-gray-400 text-sm">Ostatni wpis pojawia się w HUD terminala przy następnej komendzie — i trafia do promptu, gdy zrobisz <code class="text-gray-300">onboard</code>.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-blue-300">ctxadd</span> <span class="text-yellow-300">"rezygnujemy z Reduxa, zostaje Context API"</span>
+<span class="text-green-400">Notatka dodana do CONTEXT.md</span>
+
+<span class="text-gray-600"># w pliku, w sekcji Log postępu:</span>
+<span class="text-gray-400">- 2026-09-01: rezygnujemy z Reduxa, zostaje Context API</span>
+
+<span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-blue-300">ctxadd</span> <span class="text-yellow-300">"API zwraca ceny w groszach, nie w zł"</span>
+<span class="text-green-400">Notatka dodana do CONTEXT.md</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- HUD -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-blue-300">HUD terminala</code>
+                        <span class="text-white font-semibold">Pokazuje pamięć, zanim o nią zapytasz</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Nie musisz pamiętać o pliku, skoro plik sam się o siebie upomina. Dzieje się przy każdym znaku zachęty — zero komend do wpisania.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-blue-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Skanuje katalog roboczy</h4>
+                                <p class="text-gray-400 text-sm">Funkcja <code class="text-gray-300">prompt</code> przy każdym rysowaniu paska sprawdza, czy w folderze leży <code class="text-gray-300">CONTEXT.md</code>.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Brak pliku = żółte ostrzeżenie</h4>
+                                <p class="text-gray-400 text-sm">Wchodzisz do projektu bez pamięci i od razu widzisz: <span class="text-yellow-500/80">„⚠️ Brak pliku CONTEXT.md (wpisz 'init-ctx')”</span>.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Jest plik = ostatnia notatka</h4>
+                                <p class="text-gray-400 text-sm">Z ostatnich 10 linii wybierana jest ostatnia niepusta i wyświetlana jako <span class="text-gray-300">„📝 Ost:”</span>. Wracasz po tygodniu i po sekundzie wiesz, gdzie skończyłeś.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">╭─[ </span><span class="text-cyan-300">🖥️ CPU: ▃▅ 42%</span><span class="text-gray-600"> ]──[ </span><span class="text-green-400">✅ feat/koszyk</span><span class="text-gray-600"> ]─╮</span>
+<span class="text-gray-600">│ </span><span class="text-cyan-300">📁 C:\Projekty\MyApp</span> <span class="text-purple-300">(⚛️ Node)</span>
+<span class="text-gray-600">│   </span><span class="text-gray-500">📝 Ost: 2026-09-01: API zwraca ceny w groszach, nie w zł</span>
+<span class="text-gray-600">╰─[ </span><span class="text-cyan-300">💾 Wolne: 45GB</span><span class="text-gray-600"> ]──[ </span><span class="text-cyan-300">🎯 TODO: koszyk</span><span class="text-gray-600"> ]</span>
+
+<span class="text-gray-600"># a w projekcie bez pamięci:</span>
+<span class="text-gray-600">│   </span><span class="text-yellow-600">⚠️ Brak pliku CONTEXT.md (wpisz 'init-ctx' aby stworzyć)</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- ---------- GRUPA 2: REPO I ROADMAPA ---------- -->
+            <div class="flex items-center gap-4 mb-8">
+                <span class="font-mono text-xs text-green-400 border border-green-500/30 rounded px-2 py-1">02</span>
+                <h3 class="text-xl font-bold text-white">Repozytorium i roadmapa</h3>
+                <div class="h-px flex-grow bg-gradient-to-r from-green-500/30 to-transparent"></div>
+            </div>
+
+            <div class="space-y-6 mb-20">
+
+                <!-- ctx-repo -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-green-300">ctx-repo</code>
+                        <span class="text-white font-semibold">Zakłada repo na GitHubie i wpisuje je do pamięci</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Od pustego folderu do prywatnego repo z pierwszym commitem — jedna komenda. Wymaga <code class="text-gray-300">gh</code> (GitHub CLI) i jednorazowego <code class="text-gray-300">gh auth login</code>.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-green-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Przygotowuje repo lokalne</h4>
+                                <p class="text-gray-400 text-sm">Brak <code class="text-gray-300">.git</code>? Robi <code class="text-gray-300">git init</code>, ustawia branch na <code class="text-gray-300">main</code>, dodaje wszystkie pliki i tworzy pierwszy commit.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Tworzy repo na GitHubie i pushuje</h4>
+                                <p class="text-gray-400 text-sm">Wywołuje <code class="text-gray-300">gh repo create</code> z <code class="text-gray-300">--private --source=. --remote=origin --push</code>. Nazwa domyślnie z nazwy folderu; <code class="text-gray-300">ctx-repo apka public</code> zmienia jedno i drugie.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Zapisuje adres w CONTEXT.md</h4>
+                                <p class="text-gray-400 text-sm">URL trafia do sekcji <code class="text-gray-300">## Repozytorium</code> (istniejący wpis jest podmieniany, nie duplikowany). Od tej pory AI wie, gdzie mieszka Twój kod.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-green-300">ctx-repo</span>
+<span class="text-cyan-300">📦 Zainicjowano repozytorium lokalne (branch main).</span>
+<span class="text-cyan-300">🚀 Tworzę repozytorium 'MyApp' (private) na GitHubie...</span>
+<span class="text-gray-500">✓ Created repository toniaczlog/MyApp on GitHub
+✓ Added remote origin
+✓ Pushed commits to main</span>
+<span class="text-green-400">✅ Repo online: https://github.com/toniaczlog/MyApp</span>
+<span class="text-green-400">📝 Adres repo zapisany w CONTEXT.md - AI wie już, gdzie mieszka projekt.</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- gsave -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-green-300">gsave "wiadomość"</code>
+                        <span class="text-white font-semibold">Commit i push spięte z roadmapą</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Trzy komendy gita w jednej — plus jedyny moment, w którym terminal Ci pogratuluje.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-green-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Add i commit</h4>
+                                <p class="text-gray-400 text-sm"><code class="text-gray-300">git add .</code> plus commit z Twoim opisem. Brak zmian albo błąd commita = żółty komunikat i stop, bez pchania czegokolwiek dalej.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Push na origin</h4>
+                                <p class="text-gray-400 text-sm">Zmiany lądują na GitHubie. Push kończy się błędem? Komenda przerywa — nie zobaczysz fałszywego „sukces”.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Porównanie z roadmapą</h4>
+                                <p class="text-gray-400 text-sm">Słowa z commita są zestawiane z otwartymi zadaniami <code class="text-gray-300">- [ ]</code>. Trafienie = <strong class="text-white">fajerwerki</strong> i podpowiedź, żeby odhaczyć zadanie przez <code class="text-gray-300">ctx-done</code>.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-green-300">gsave</span> <span class="text-yellow-300">"koszyk zakupowy dziala"</span>
+<span class="text-gray-500">[main 3f9a1c2] koszyk zakupowy dziala
+ 4 files changed, 128 insertions(+)</span>
+<span class="text-green-400">Sukces! Zmiany na GitHubie.</span>
+<span class="text-purple-300">         .    *    .</span>
+<span class="text-cyan-300">      *   \   |   /   *</span>
+<span class="text-yellow-300">   .   --   🎆   --   .</span>
+<span class="text-purple-300">      *   /   |   \   *</span>
+<span class="text-green-400">  🌟 Commit domyka zadanie: koszyk zakupowy 🌟</span>
+<span class="text-gray-500">  Odhacz je w pamięci projektu: ctx-done "koszyk zakupowy"</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- ctx-done -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-green-300">ctx-done "fragment"</code>
+                        <span class="text-white font-semibold">Odhacza zadanie i zapisuje datę</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Roadmapa, której nikt nie aktualizuje, jest gorsza niż jej brak — bo AI czyta ją jako prawdę. Ta komenda sprawia, że aktualizacja kosztuje jedno słowo.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-green-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Szuka pasującego zadania</h4>
+                                <p class="text-gray-400 text-sm">Wystarczy fragment nazwy — bierze pierwszą linię <code class="text-gray-300">- [ ]</code>, która go zawiera. Nic nie pasuje? Wypisuje listę wszystkich otwartych zadań zamiast milczeć.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Zamienia [ ] na [x]</h4>
+                                <p class="text-gray-400 text-sm">Plik zapisuje się w UTF-8, reszta treści zostaje nietknięta. Odhaczone zadanie znika z listy czytanej przez <code class="text-gray-300">gsave</code>.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Log postępu i fajerwerki</h4>
+                                <p class="text-gray-400 text-sm">Na koniec pliku trafia <code class="text-gray-300">- data: ✅ Zrobione - nazwa</code>, a w terminalu odpala się animacja. Masz datowaną historię tego, co faktycznie dowieziono.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-green-300">ctx-done</span> <span class="text-yellow-300">"koszyk"</span>
+<span class="text-green-400">✅ Odhaczono w roadmapie: koszyk zakupowy</span>
+<span class="text-yellow-300">   .   --   🎆   --   .</span>
+<span class="text-green-400">  🌟 Zadanie z roadmapy zamknięte! 🌟</span>
+
+<span class="text-gray-600"># w CONTEXT.md:</span>
+<span class="text-purple-300">## Roadmap / Aktualne zadania</span>
+<span class="text-gray-500">- [x] ekran logowania</span>
+<span class="text-gray-500">- [x] koszyk zakupowy</span>
+<span class="text-gray-400">- [ ] integracja płatności</span>
+
+<span class="text-purple-300">## Log postępu</span>
+<span class="text-gray-500">- 2026-09-01: ✅ Zrobione - koszyk zakupowy</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- ---------- GRUPA 3: PAMIĘĆ DLA AI ---------- -->
+            <div class="flex items-center gap-4 mb-8">
+                <span class="font-mono text-xs text-pink-400 border border-pink-500/30 rounded px-2 py-1">03</span>
+                <h3 class="text-xl font-bold text-white">Przekazanie pamięci do AI</h3>
+                <div class="h-px flex-grow bg-gradient-to-r from-pink-500/30 to-transparent"></div>
+            </div>
+
+            <div class="space-y-6 mb-12">
+
+                <!-- onboard -->
+                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-pink-500">
+                    <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
+                        <code class="font-mono text-lg font-bold text-pink-300">onboard</code>
+                        <span class="text-white font-semibold">Zamienia projekt w jeden prompt startowy</span>
+                    </div>
+                    <p class="text-gray-400 text-sm mb-6 max-w-3xl">Pierwsza wiadomość w nowej rozmowie decyduje o całej reszcie. Ta komenda buduje ją za Ciebie w sekundę.</p>
+                    <div class="grid lg:grid-cols-2 gap-6 lg:gap-10">
+                        <ol class="ctx-steps text-pink-400">
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Zrzuca strukturę projektu</h4>
+                                <p class="text-gray-400 text-sm">Skanuje trzy poziomy w głąb, pomijając <code class="text-gray-300">node_modules</code>, <code class="text-gray-300">.git</code>, <code class="text-gray-300">dist</code>, <code class="text-gray-300">build</code> i <code class="text-gray-300">.venv</code> — czyli to, co i tak zapchałoby okno kontekstu.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Dokleja pliki tożsamości</h4>
+                                <p class="text-gray-400 text-sm">Do drzewa dochodzi <code class="text-gray-300">package.json</code>, <code class="text-gray-300">README.md</code> i całe <code class="text-gray-300">CONTEXT.md</code> — cel, stack, roadmapa i wszystkie notatki z <code class="text-gray-300">ctxadd</code>.</p>
+                            </li>
+                            <li>
+                                <h4 class="text-white font-semibold text-sm mb-1">Schowek i nowa karta</h4>
+                                <p class="text-gray-400 text-sm">Całość ze wstępem „zapoznaj się, zanim zadam pierwsze pytanie” ląduje w schowku. Przy włączonym auto-starcie przeglądarki od razu otwiera się czat — zostaje Ctrl+V.</p>
+                            </li>
+                        </ol>
+                        <div class="ctx-terminal self-start">
+                            <div class="flex items-center gap-1.5 px-3 py-2 border-b border-white/5">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500/50"></span>
+                                <span class="w-2.5 h-2.5 rounded-full bg-green-500/50"></span>
+                                <span class="ml-2 text-[10px] text-gray-500 font-mono">Windows Terminal</span>
+                            </div>
+<pre><span class="text-gray-600">PS C:\Projekty\MyApp&gt;</span> <span class="text-pink-300">onboard</span>
+<span class="text-green-400">✅ Mega-Prompt Inicjalizacyjny skopiowany do schowka!</span>
+<span class="text-gray-500">🌐 Otwieram https://chatgpt.com/ - wciśnij Ctrl+V.</span>
+
+<span class="text-gray-600"># w schowku:</span>
+<span class="text-gray-400">Oto struktura mojego projektu i podstawowe pliki.
+Zapoznaj się z nimi, zanim zadam pierwsze pytanie:</span>
+
+<span class="text-purple-300">=== Struktura Projektu ===</span>
+<span class="text-gray-500">.\src\components\Cart.jsx
+.\src\hooks\useCart.js
+.\index.html</span>
+
+<span class="text-purple-300">=== CONTEXT.md ===</span>
+<span class="text-gray-500">## Cel Projektu
+Sklep z ceramiką...</span></pre>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+
+            <!-- Bonus: ctx-map -->
+            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-purple-500 flex flex-col sm:flex-row sm:items-center gap-4">
+                <i class="fas fa-diagram-project text-2xl text-purple-400 sm:mx-3"></i>
+                <div>
+                    <h4 class="text-white font-semibold mb-1"><code class="font-mono text-purple-300">ctx-map</code> — gdy projekt urośnie ponad <code class="font-mono text-gray-300">onboard</code></h4>
+                    <p class="text-gray-400 text-sm">
+                        Ta sama zasada, ale głębiej: drzewo plików, zależności i skrypty z <code class="text-gray-300">package.json</code> oraz wykryte importy lokalne między plikami.
+                        Efekt to prompt z prośbą o opis architektury i wskazanie modułów, które robią za dużo. Przydaje się raz na jakiś czas, nie codziennie.
+                    </p>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -458,6 +951,9 @@
                         Zarządzaj kontekstem AI (Automatycznie)
                     </h3>
                     <p class="text-gray-400 text-sm mb-2 ml-11">W każdym nowym projekcie wpisz w terminalu komendę <code class="text-white">init-ctx</code>. Jeśli brakuje pliku pamięci (<code>CONTEXT.md</code>), zostanie on wygenerowany z szablonu. Będziesz z niego korzystać jak z mapy dla ChatGPT!</p>
+                    <a href="#kontekst" class="inline-flex items-center gap-2 ml-11 text-sm font-medium text-pink-300 hover:text-pink-200 transition-colors">
+                        Pełny przewodnik po komendach ctx <i class="fas fa-arrow-right text-xs"></i>
+                    </a>
                 </div>
             </div>
         </div>
