@@ -6,6 +6,7 @@
     <title>VoidWorkflow - Ściągawka (Cheatsheet)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="void.css">
     <script>
         tailwind.config = {
             darkMode: 'class',
@@ -28,23 +29,49 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        
-        body {
-            background-color: #0f0f17;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
+        /* Wiersz komendy — jednolity układ nazwa / opis */
+        .cmd {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+            background: rgba(24, 24, 36, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.5rem;
+            padding: 0.75rem;
         }
-
-        .glass-card {
-            background: rgba(24, 24, 36, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+        @media (min-width: 640px) {
+            .cmd {
+                flex-direction: row;
+                align-items: baseline;
+                justify-content: space-between;
+                gap: 1rem;
+            }
+        }
+        .cmd code {
+            font-family: 'JetBrains Mono', Consolas, monospace;
+            font-size: 0.8125rem;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+        .cmd p {
+            font-size: 0.8125rem;
+            color: #9ca3af;
+            margin: 0;
+        }
+        .is-hidden {
+            display: none !important;
+        }
+        mark {
+            background: rgba(139, 92, 246, 0.35);
+            color: #ffffff;
+            border-radius: 2px;
+            padding: 0 1px;
         }
     </style>
 </head>
 <body class="antialiased selection:bg-purple-500/30 selection:text-purple-200 min-h-screen flex flex-col relative overflow-x-hidden">
+
+    <a href="#tresc" class="skip-link">Przejdź do treści</a>
 
     <!-- Background Effects -->
     <div class="fixed top-0 right-0 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
@@ -69,128 +96,239 @@
     </nav>
 
     <!-- Content -->
-    <main class="flex-grow max-w-6xl mx-auto px-4 py-12 w-full">
-        
-        <div class="mb-10">
+    <main id="tresc" class="flex-grow max-w-6xl mx-auto px-4 py-12 w-full">
+
+        <div class="mb-8">
             <h1 class="text-3xl sm:text-4xl font-extrabold mb-4 text-white">Baza Wiedzy (Cheatsheet)</h1>
             <p class="text-gray-400">Wszystkie magiczne słowa, komendy i skróty, które ułatwiają vibe-coding w jednym miejscu.</p>
         </div>
 
-        <div class="grid lg:grid-cols-2 gap-8">
-            
+        <!-- Wyszukiwarka -->
+        <div class="glass-card rounded-xl p-4 mb-10 sticky top-4 z-40">
+            <label for="cmd-search" class="sr-only">Szukaj komendy</label>
+            <div class="relative">
+                <i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm" aria-hidden="true"></i>
+                <input type="search" id="cmd-search" autocomplete="off"
+                       placeholder="Szukaj komendy lub opisu…  (naciśnij / )"
+                       class="w-full bg-[#0c0c12] border border-white/10 rounded-lg pl-10 pr-4 py-2.5 text-sm text-white placeholder:text-gray-600 focus:border-purple-500 focus:outline-none transition-colors">
+            </div>
+            <p id="cmd-count" class="text-xs text-gray-500 mt-2" role="status" aria-live="polite"></p>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-8 items-start">
+
             <!-- Tagi do ChatGPT -->
-            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-purple-500">
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-purple-500" data-block>
                 <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <i class="fas fa-magic text-purple-400"></i> Tagi dla ChatGPT
+                    <i class="fas fa-magic text-purple-400" aria-hidden="true"></i> Tagi dla ChatGPT
                 </h2>
                 <p class="text-sm text-gray-400 mb-6">Wpisuj na samym początku wiadomości na czacie, by zmusić AI do konkretnego zachowania.</p>
-                
-                <div class="space-y-4">
-                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+
+                <div class="space-y-4" data-group>
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5" data-item>
                         <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">TERMINAL:</div>
                         <p class="text-gray-300 text-sm">Każe wygenerować sam blok komend do skopiowania do konsoli. AI nie będzie niczego tłumaczyć, poda tylko kod i sposób jak sprawdzić czy się udało.</p>
                     </div>
-                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5" data-item>
                         <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">PLIK:</div>
                         <p class="text-gray-300 text-sm">Otrzymujesz CAŁY kod pliku od góry do dołu. Idealne, gdy AI znowu pisze <em>"wstaw tę linijkę gdzieś na górze"</em>.</p>
                     </div>
-                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5" data-item>
                         <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">HANDOFF:</div>
-                        <p class="text-gray-300 text-sm">Streszcza dzisiejszą pracę nad projektem, byś mógł zaktualizować swój plik `CONTEXT.md`.</p>
+                        <p class="text-gray-300 text-sm">Streszcza dzisiejszą pracę nad projektem, byś mógł zaktualizować swój plik <code>CONTEXT.md</code>.</p>
                     </div>
-                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5">
+                    <div class="bg-void-800/50 p-4 rounded-xl border border-white/5" data-item>
                         <div class="font-mono text-xs font-bold text-purple-400 bg-purple-400/10 px-2 py-1 rounded w-fit mb-2">WYJAŚNIJ:</div>
-                        <p class="text-gray-300 text-sm">Odwrotność `TERMINAL:`. Jeśli czegoś nie rozumiesz, AI ma obowiązek wytłumaczyć Ci to jak człowiekowi, używając metafor, BEZ podawania komend.</p>
+                        <p class="text-gray-300 text-sm">Odwrotność <code>TERMINAL:</code>. Jeśli czegoś nie rozumiesz, AI ma obowiązek wytłumaczyć Ci to jak człowiekowi, używając metafor, BEZ podawania komend.</p>
                     </div>
                 </div>
             </section>
 
-            <!-- Skróty w Terminalu -->
-            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-blue-500">
-                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
-                    <i class="fas fa-keyboard text-blue-400"></i> Skróty (PowerShell)
+            <!-- Pamięć projektu -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-blue-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+                    <i class="fas fa-brain text-blue-400" aria-hidden="true"></i> Pamięć projektu
                 </h2>
-                <p class="text-sm text-gray-400 mb-6">Wpisuj w czarnym okienku Windows Terminal (PowerShell).</p>
-                
-                <div class="space-y-6">
-                    <!-- Podstawowe -->
-                    <div>
-                        <h4 class="text-blue-300 font-bold text-sm uppercase tracking-wider mb-3">Podstawowe ułatwienia</h4>
-                        <div class="space-y-3">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-blue-400">runc "npm run dev"</code>
-                                <span class="text-sm text-gray-400">Uruchamia komendę i od razu kopiuje wynik do schowka</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-blue-400">tree2</code>
-                                <span class="text-sm text-gray-400">Kopiuje układ Twoich plików do schowka (bez śmieci)</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-blue-400">filec .\plik.txt</code>
-                                <span class="text-sm text-gray-400">Kopiuje ładnie cały plik z nagłówkiem</span>
-                            </div>
-                        </div>
-                    </div>
+                <p class="text-sm text-gray-400 mb-6">Plik <code class="text-white">CONTEXT.md</code> w katalogu projektu. <a href="index.html#kontekst" class="text-blue-300 hover:text-blue-200 underline underline-offset-2">Pełny przewodnik krok po kroku &rarr;</a></p>
 
-                    <!-- Naprawa -->
-                    <div>
-                        <h4 class="text-pink-300 font-bold text-sm uppercase tracking-wider mb-3">Ratunek & Błędy</h4>
-                        <div class="space-y-3">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-pink-400">loglast 50</code>
-                                <span class="text-sm text-gray-400">Kopiuje ostatnie 50 linii z konsoli (nawet jak zniknęły!)</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-pink-400">npmnuke</code>
-                                <span class="text-sm text-gray-400">Ultimate Fix: Kasuje node_modules, cache i instaluje od nowa</span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Git -->
-                    <div>
-                        <h4 class="text-emerald-300 font-bold text-sm uppercase tracking-wider mb-3">Git i Baza Wiedzy</h4>
-                        <div class="space-y-3">
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-emerald-400">gsave "wiadomosc"</code>
-                                <span class="text-sm text-gray-400">Auto-Zapis (add, commit i push za jednym zamachem)</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-emerald-400">gundo</code>
-                                <span class="text-sm text-gray-400">Cofa zepsutego lokalnego commita (nie rusza plików!)</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-emerald-400">safedeploy</code>
-                                <span class="text-sm text-gray-400">Robi build, a jeśli się zepsuje - od razu kopiuje błąd</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-emerald-400">ctxadd "Zmieniłem API"</code>
-                                <span class="text-sm text-gray-400">Dopisuje notatkę na koniec pliku CONTEXT.md bez jego otwierania</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-yellow-400">scratch "Zapytać o padding"</code>
-                                <span class="text-sm text-gray-400">Przypina "żółtą karteczkę" z notatką na stałe do znaku zachęty (usuń przez 'scratch clear')</span>
-                            </div>
-                            <div class="flex flex-col sm:flex-row sm:items-center justify-between bg-void-800/50 p-3 rounded-lg border border-white/5 gap-2">
-                                <code class="font-mono text-sm font-bold text-emerald-400">cheat vps</code>
-                                <span class="text-sm text-gray-400">Wyświetla w terminalu przypomnienie trudnych komend (vps, npm, git)</span>
-                            </div>
-                        </div>
-                    </div>
-                    
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-blue-400">init-ctx</code><p>Tworzy szablon pamięci projektu (warianty: <code>init-ctx nextjs</code>, <code>init-ctx vps</code>)</p></div>
+                    <div class="cmd" data-item><code class="text-blue-400">ctx</code><p>Otwiera CONTEXT.md w VS Code, a gdy go nie ma — w Notatniku</p></div>
+                    <div class="cmd" data-item><code class="text-blue-400">ctxadd "Zmieniłem API"</code><p>Dopisuje datowaną notatkę na koniec pliku, bez otwierania edytora</p></div>
+                    <div class="cmd" data-item><code class="text-blue-400">ctx-done "koszyk"</code><p>Odhacza zadanie w roadmapie ([ ] &rarr; [x]) i zapisuje datę ukończenia</p></div>
+                    <div class="cmd" data-item><code class="text-blue-400">ctx-repo</code><p>Zakłada prywatne repo na GitHubie i wpisuje jego adres do CONTEXT.md</p></div>
+                    <div class="cmd" data-item><code class="text-blue-400">ctx-map</code><p>Mapa architektury: drzewo, zależności i importy lokalne jako prompt dla AI</p></div>
                 </div>
             </section>
+
+            <!-- Prompty dla AI -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-pink-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-2 flex items-center gap-3">
+                    <i class="fas fa-wand-magic-sparkles text-pink-400" aria-hidden="true"></i> Prompty dla AI
+                </h2>
+                <p class="text-sm text-gray-400 mb-6">Każda z tych komend kopiuje gotowy prompt do schowka i (opcjonalnie) otwiera czat w przeglądarce.</p>
+
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-pink-400">onboard</code><p>Mega-prompt startowy: struktura projektu, package.json, README i CONTEXT.md</p></div>
+                    <div class="cmd" data-item><code class="text-pink-400">vibe-review</code><p>Bierze git diff i prosi o brutalnie szczere code review</p></div>
+                    <div class="cmd" data-item><code class="text-pink-400">explain .\src\app.js</code><p>Prosi o wyjaśnienie pliku linijka po linijce, prostym językiem</p></div>
+                    <div class="cmd" data-item><code class="text-pink-400">doc-gen</code><p>Prompt na kompletne README.md: opis, instalacja, struktura, FAQ</p></div>
+                    <div class="cmd" data-item><code class="text-pink-400">mock-data "użytkownicy" 50</code><p>Prompt na realistyczne dane testowe w czystym JSON</p></div>
+                    <div class="cmd" data-item><code class="text-pink-400">wtf</code><p>Łapie ostatni błąd z konsoli i prosi o wyjaśnienie plus komendę naprawczą</p></div>
+                    <div class="cmd" data-item><code class="text-pink-400">review</code><p>Starszy, prostszy wariant code review (sam diff, bez kontekstu projektu)</p></div>
+                </div>
+            </section>
+
+            <!-- Git i zapisywanie -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-emerald-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fab fa-git-alt text-emerald-400" aria-hidden="true"></i> Git i zapisywanie
+                </h2>
+
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-emerald-400">gsave "wiadomość"</code><p>Add, commit i push naraz. Fajerwerki, gdy commit domyka zadanie z roadmapy</p></div>
+                    <div class="cmd" data-item><code class="text-emerald-400">gundo</code><p>Cofa ostatni commit, zostawiając zmiany w plikach (alias: <code>undo</code>, <code>whoops</code>)</p></div>
+                    <div class="cmd" data-item><code class="text-emerald-400">gs</code><p>Skrócony git status z informacją o gałęzi</p></div>
+                    <div class="cmd" data-item><code class="text-emerald-400">gl</code><p>Ostatnie 15 commitów w jednej linii każdy</p></div>
+                    <div class="cmd" data-item><code class="text-emerald-400">safedeploy</code><p>Build, a gdy się wywali — treść błędu ląduje w schowku zamiast deployu</p></div>
+                    <div class="cmd" data-item><code class="text-emerald-400">snapshot</code><p>Backup projektu do ZIP z pominięciem node_modules, .git i dist</p></div>
+                </div>
+            </section>
+
+            <!-- Przenoszenie danych do AI -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-cyan-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-clipboard text-cyan-400" aria-hidden="true"></i> Przenoszenie danych
+                </h2>
+
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-cyan-400">filec .\plik.txt</code><p>Kopiuje zawartość pliku razem z nagłówkiem ze ścieżką</p></div>
+                    <div class="cmd" data-item><code class="text-cyan-400">tree2</code><p>Kopiuje drzewo plików bez śmieci (domyślnie 2 poziomy, <code>tree2 3</code> głębiej)</p></div>
+                    <div class="cmd" data-item><code class="text-cyan-400">runc "npm run dev"</code><p>Uruchamia komendę, pokazuje wynik i od razu kopiuje go do schowka</p></div>
+                    <div class="cmd" data-item><code class="text-cyan-400">loglast 50</code><p>Kopiuje ostatnie 50 linii z logu sesji — także te, które zniknęły z ekranu</p></div>
+                </div>
+            </section>
+
+            <!-- Ratunek i porządki -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-red-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-medkit text-red-400" aria-hidden="true"></i> Ratunek i porządki
+                </h2>
+
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-red-400">npmnuke</code><p>Kasuje node_modules i package-lock, czyści cache, instaluje od nowa</p></div>
+                    <div class="cmd" data-item><code class="text-red-400">clean-space</code><p>Usuwa node_modules, dist, .next, build i coverage — odzyskuje gigabajty</p></div>
+                    <div class="cmd" data-item><code class="text-red-400">stats</code><p>Liczy pliki i linie kodu w projekcie</p></div>
+                    <div class="cmd" data-item><code class="text-red-400">vibe-check</code><p>Pasywno-agresywny linter: znajduje najgrubszy plik i komentuje</p></div>
+                    <div class="cmd" data-item><code class="text-red-400">rage-quit</code><p>(╯°□°）╯︵ ┻━┻ Awaryjny commit „WIP - ratunku" i zamknięcie terminala</p></div>
+                </div>
+            </section>
+
+            <!-- Projekty i zadania -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-yellow-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-list-check text-yellow-400" aria-hidden="true"></i> Projekty i zadania
+                </h2>
+
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-yellow-400">vp add [nazwa]</code><p>Zapisuje bieżący folder na liście projektów (domyślna nazwa = nazwa folderu)</p></div>
+                    <div class="cmd" data-item><code class="text-yellow-400">vp go [nazwa]</code><p>Teleportuje do projektu i przypina ostatnią notatkę z CONTEXT.md do promptu</p></div>
+                    <div class="cmd" data-item><code class="text-yellow-400">radar</code><p>Tabela wszystkich projektów: wykryty stack i status Gita</p></div>
+                    <div class="cmd" data-item><code class="text-yellow-400">todo add "fix"</code><p>Dodaje zadanie. <code>todo list</code>, <code>todo done 0</code>, <code>todo rm 0</code>. Aktywne widać w HUD</p></div>
+                    <div class="cmd" data-item><code class="text-yellow-400">scratch "myśl"</code><p>Przypina żółtą karteczkę do znaku zachęty (zdejmiesz przez <code>scratch clear</code>)</p></div>
+                    <div class="cmd" data-item><code class="text-yellow-400">zapamietaj nazwa "komenda"</code><p>Zapisuje długą komendę pod krótką nazwą</p></div>
+                    <div class="cmd" data-item><code class="text-yellow-400">przypomnij nazwa</code><p>Wykonuje zapamiętaną wcześniej komendę</p></div>
+                </div>
+            </section>
+
+            <!-- Terminal i diagnostyka -->
+            <section class="glass-card rounded-2xl p-6 border-t-4 border-t-indigo-500" data-block>
+                <h2 class="text-2xl font-bold text-white mb-6 flex items-center gap-3">
+                    <i class="fas fa-stethoscope text-indigo-400" aria-hidden="true"></i> Terminal i diagnostyka
+                </h2>
+
+                <div class="space-y-3" data-group>
+                    <div class="cmd" data-item><code class="text-indigo-400">void</code><p>Otwiera pełną pomoc w terminalu (alias: <code>pomoc</code>)</p></div>
+                    <div class="cmd" data-item><code class="text-indigo-400">void doctor</code><p>Sprawdza git, gh, node, code, ExecutionPolicy i logowanie do GitHuba</p></div>
+                    <div class="cmd" data-item><code class="text-indigo-400">cheat vps</code><p>Ściągawka trudnych komend (warianty: <code>vps</code>, <code>git</code>, <code>npm</code>)</p></div>
+                    <div class="cmd" data-item><code class="text-indigo-400">focus</code><p>Tryb Zen — wyłącza ostrzeżenia offline i skaner zombie</p></div>
+                    <div class="cmd" data-item><code class="text-indigo-400">brb</code><p>Blokuje ekran terminala napisem „Zaraz wracam"</p></div>
+                    <div class="cmd" data-item><code class="text-indigo-400">qr-link 3000</code><p>Kod QR z lokalnym adresem IP do testów na telefonie</p></div>
+                    <div class="cmd" data-item><code class="text-indigo-400">mock-server 8080</code><p>Prosty serwer statyczny HTTP w bieżącym folderze</p></div>
+                </div>
+            </section>
+
         </div>
-        
-        <div class="mt-8 text-center text-gray-500 text-sm">
+
+        <p id="cmd-empty" class="is-hidden text-center text-gray-500 py-12">
+            Nic nie pasuje do tego wyszukiwania. <button type="button" id="cmd-reset" class="text-purple-400 hover:text-purple-300 underline underline-offset-2">Wyczyść filtr</button>
+        </p>
+
+        <div class="mt-8 text-center text-gray-400 text-sm">
             <p>Nie pamiętasz komend w terminalu? Po prostu wpisz w nim: <code class="text-white bg-white/10 px-2 py-1 rounded">void</code> lub <code class="text-white bg-white/10 px-2 py-1 rounded">pomoc</code></p>
         </div>
     </main>
 
     <!-- Footer -->
     <footer class="border-t border-white/5 py-6 text-center">
-        <p class="text-gray-600 text-xs">VoidWorkflow &copy; 2026. Made for Vibe-Coders.</p>
+        <p class="text-gray-500 text-xs">VoidWorkflow &copy; 2026. Made for Vibe-Coders.</p>
     </footer>
 
+<script>
+(function () {
+    const input = document.getElementById('cmd-search');
+    const counter = document.getElementById('cmd-count');
+    const empty = document.getElementById('cmd-empty');
+    const reset = document.getElementById('cmd-reset');
+    const items = [...document.querySelectorAll('[data-item]')];
+    const blocks = [...document.querySelectorAll('[data-block]')];
+
+    // Tekst do przeszukania zapamiętujemy raz — filtrowanie nie dotyka DOM-u
+    // dopóki nie musi.
+    items.forEach(el => { el.dataset.haystack = el.textContent.toLowerCase().replace(/\s+/g, ' '); });
+
+    const total = items.length;
+
+    function apply() {
+        const q = input.value.trim().toLowerCase();
+        let shown = 0;
+
+        items.forEach(el => {
+            const match = !q || el.dataset.haystack.includes(q);
+            el.classList.toggle('is-hidden', !match);
+            if (match) shown++;
+        });
+
+        // Sekcja bez żadnego widocznego wpisu znika w całości.
+        blocks.forEach(block => {
+            const any = block.querySelector('[data-item]:not(.is-hidden)');
+            block.classList.toggle('is-hidden', !any);
+        });
+
+        empty.classList.toggle('is-hidden', shown > 0);
+        counter.textContent = q
+            ? `Pasujących pozycji: ${shown} z ${total}`
+            : `${total} komend i tagów`;
+    }
+
+    input.addEventListener('input', apply);
+    input.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { input.value = ''; apply(); }
+    });
+    reset.addEventListener('click', () => { input.value = ''; apply(); input.focus(); });
+
+    // "/" ustawia kursor w wyszukiwarce, o ile nie piszemy już w polu.
+    document.addEventListener('keydown', e => {
+        if (e.key !== '/' || e.ctrlKey || e.metaKey || e.altKey) return;
+        const tag = (e.target.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || e.target.isContentEditable) return;
+        e.preventDefault();
+        input.focus();
+        input.select();
+    });
+
+    apply();
+})();
+</script>
 </body>
 </html>

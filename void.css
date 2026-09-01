@@ -1,0 +1,84 @@
+/* =====================================================================
+   VoidWorkflow — wspólna baza stylów dla index.html i docs.html
+   Style specyficzne dla danej strony zostają w jej <style>.
+   ===================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
+
+body {
+    background-color: #0f0f17;
+    color: #e2e8f0;
+    font-family: 'Inter', sans-serif;
+}
+
+.glass-card {
+    background: rgba(24, 24, 36, 0.6);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    height: 6px;
+    width: 6px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: rgba(139, 92, 246, 0.4);
+    border-radius: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(139, 92, 246, 0.8);
+}
+
+/* --- Dostępność ----------------------------------------------------- */
+
+/* Kotwice nie mogą chować się pod przyklejoną nawigacją. */
+[id] {
+    scroll-margin-top: 5.5rem;
+}
+
+/* Widoczny focus dla nawigacji klawiaturą — Tailwind wyłącza domyślny. */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+[tabindex]:focus-visible {
+    outline: 2px solid #a78bfa;
+    outline-offset: 3px;
+    border-radius: 4px;
+}
+
+/* Link "przejdź do treści" — widoczny dopiero po sfokusowaniu Tabem. */
+.skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -4rem;
+    z-index: 100;
+    padding: 0.625rem 1rem;
+    border-radius: 0.5rem;
+    background: #8b5cf6;
+    color: #ffffff;
+    font-weight: 600;
+    transition: top 0.15s ease-in-out;
+}
+.skip-link:focus {
+    top: 1rem;
+}
+
+/* Szanujemy systemowe ograniczenie animacji. */
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto !important;
+    }
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

@@ -6,6 +6,7 @@
     <title>Void Terminal Workflow | Vibe-coding bez frustracji</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="void.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css" />
     <script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
@@ -40,14 +41,6 @@
         }
     </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
-        
-        body {
-            background-color: #0f0f17;
-            color: #e2e8f0;
-            font-family: 'Inter', sans-serif;
-        }
-        
         .bg-grid {
             background-image: radial-gradient(rgba(139, 92, 246, 0.15) 1px, transparent 1px);
             background-size: 30px 30px;
@@ -58,29 +51,6 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
-        }
-
-        .glass-card {
-            background: rgba(24, 24, 36, 0.6);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .custom-scrollbar::-webkit-scrollbar {
-            height: 6px;
-            width: 6px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: rgba(139, 92, 246, 0.4);
-            border-radius: 4px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: rgba(139, 92, 246, 0.8);
         }
 
         /* Oś 3 kroków w sekcji CONTEXT.md */
@@ -159,6 +129,8 @@
 </head>
 <body class="antialiased selection:bg-purple-500/30 selection:text-purple-200 relative overflow-x-hidden">
 
+    <a href="#tresc" class="skip-link">Przejdź do treści</a>
+
     <!-- Background Effects -->
     <div class="fixed inset-0 z-[-1] bg-grid pointer-events-none"></div>
     <div class="fixed top-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-purple-600/20 rounded-full blur-[100px] pointer-events-none z-[-1]"></div>
@@ -190,7 +162,7 @@
     </nav>
 
     <!-- Hero Section with Terminal -->
-    <section class="pt-32 pb-20 sm:pt-40 sm:pb-24 lg:pb-32 px-4 relative">
+    <section id="tresc" class="pt-32 pb-20 sm:pt-40 sm:pb-24 lg:pb-32 px-4 relative">
         <div class="max-w-7xl mx-auto">
             <div class="grid lg:grid-cols-2 gap-12 items-center">
                 <!-- Text Column (Left) -->
@@ -331,7 +303,7 @@
             
             <div class="mt-12 text-center">
                 <p class="text-gray-400 text-sm mb-4">Mamy też auto-uruchamianie przeglądarki!</p>
-                <p class="text-gray-500 text-xs">Jeśli to zaznaczysz, Void po każdej komendzie AI (jak <code class="text-white">vibe-review</code>) sam otworzy nową kartę ChatGPT, żebyś mógł tylko wcisnąć Ctrl+V.</p>
+                <p class="text-gray-400 text-xs">Jeśli to zaznaczysz, Void po każdej komendzie AI (jak <code class="text-white">vibe-review</code>) sam otworzy nową kartę ChatGPT, żebyś mógł tylko wcisnąć Ctrl+V.</p>
             </div>
         </div>
     </section>
@@ -349,6 +321,54 @@
                 </p>
             </div>
 
+            <!-- Skroty do komend (mobile) -->
+            <nav class="lg:hidden -mx-4 px-4 mb-10 overflow-x-auto custom-scrollbar" aria-label="Spis komend ctx">
+                <ul class="flex gap-2 w-max pb-2">
+                    <li><a href="#cmd-init-ctx" class="block whitespace-nowrap font-mono text-xs text-blue-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">init-ctx</a></li>
+                    <li><a href="#cmd-ctx" class="block whitespace-nowrap font-mono text-xs text-blue-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">ctx</a></li>
+                    <li><a href="#cmd-ctxadd" class="block whitespace-nowrap font-mono text-xs text-blue-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">ctxadd</a></li>
+                    <li><a href="#cmd-hud" class="block whitespace-nowrap font-mono text-xs text-blue-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">HUD terminala</a></li>
+                    <li><a href="#cmd-ctx-repo" class="block whitespace-nowrap font-mono text-xs text-green-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">ctx-repo</a></li>
+                    <li><a href="#cmd-gsave" class="block whitespace-nowrap font-mono text-xs text-green-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">gsave</a></li>
+                    <li><a href="#cmd-ctx-done" class="block whitespace-nowrap font-mono text-xs text-green-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">ctx-done</a></li>
+                    <li><a href="#cmd-onboard" class="block whitespace-nowrap font-mono text-xs text-pink-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">onboard</a></li>
+                    <li><a href="#cmd-ctx-map" class="block whitespace-nowrap font-mono text-xs text-pink-400 bg-void-900 border border-white/10 rounded-full px-3 py-1.5">ctx-map</a></li>
+                </ul>
+            </nav>
+
+            <div class="lg:grid lg:grid-cols-[13rem_minmax(0,1fr)] lg:gap-10 lg:items-start">
+
+                <!-- Przyklejona nawigacja sekcji (desktop) -->
+                <aside class="hidden lg:block sticky top-24 self-start" aria-label="Spis komend ctx">
+                    <nav id="ctx-toc" class="space-y-5 text-sm">
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-blue-400 mb-2">01 &middot; Fundament</p>
+                            <ul class="space-y-1 border-l border-white/10">
+                                <li><a href="#cmd-init-ctx" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">init-ctx</a></li>
+                                <li><a href="#cmd-ctx" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">ctx</a></li>
+                                <li><a href="#cmd-ctxadd" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">ctxadd</a></li>
+                                <li><a href="#cmd-hud" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">HUD terminala</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-green-400 mb-2">02 &middot; Repo i roadmapa</p>
+                            <ul class="space-y-1 border-l border-white/10">
+                                <li><a href="#cmd-ctx-repo" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">ctx-repo</a></li>
+                                <li><a href="#cmd-gsave" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">gsave</a></li>
+                                <li><a href="#cmd-ctx-done" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">ctx-done</a></li>
+                            </ul>
+                        </div>
+                        <div>
+                            <p class="font-mono text-[10px] uppercase tracking-widest text-pink-400 mb-2">03 &middot; Pamięć dla AI</p>
+                            <ul class="space-y-1 border-l border-white/10">
+                                <li><a href="#cmd-onboard" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">onboard</a></li>
+                                <li><a href="#cmd-ctx-map" class="block -ml-px border-l border-transparent pl-3 py-1 font-mono text-gray-400 hover:text-white hover:border-white/30 transition-colors">ctx-map</a></li>
+                            </ul>
+                        </div>
+                    </nav>
+                </aside>
+
+                <div>
             <!-- ---------- GRUPA 1: FUNDAMENT ---------- -->
             <div class="flex items-center gap-4 mb-8">
                 <span class="font-mono text-xs text-blue-400 border border-blue-500/30 rounded px-2 py-1">01</span>
@@ -359,7 +379,7 @@
             <div class="space-y-6 mb-20">
 
                 <!-- init-ctx -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                <article id="cmd-init-ctx" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-blue-300">init-ctx</code>
                         <span class="text-white font-semibold">Tworzy plik pamięci projektu</span>
@@ -414,7 +434,7 @@ aby zrozumieć nad czym pracujemy.</span>
                 </article>
 
                 <!-- ctx -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                <article id="cmd-ctx" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-blue-300">ctx</code>
                         <span class="text-white font-semibold">Otwiera pamięć do ręcznej edycji</span>
@@ -459,7 +479,7 @@ w trzech kliknięciach, bez rejestracji.</span>
                 </article>
 
                 <!-- ctxadd -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                <article id="cmd-ctxadd" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-blue-300">ctxadd "notatka"</code>
                         <span class="text-white font-semibold">Dopisuje wniosek bez otwierania edytora</span>
@@ -500,7 +520,7 @@ w trzech kliknięciach, bez rejestracji.</span>
                 </article>
 
                 <!-- HUD -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
+                <article id="cmd-hud" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-blue-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-blue-300">HUD terminala</code>
                         <span class="text-white font-semibold">Pokazuje pamięć, zanim o nią zapytasz</span>
@@ -551,7 +571,7 @@ w trzech kliknięciach, bez rejestracji.</span>
             <div class="space-y-6 mb-20">
 
                 <!-- ctx-repo -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
+                <article id="cmd-ctx-repo" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-green-300">ctx-repo</code>
                         <span class="text-white font-semibold">Zakłada repo na GitHubie i wpisuje je do pamięci</span>
@@ -592,7 +612,7 @@ w trzech kliknięciach, bez rejestracji.</span>
                 </article>
 
                 <!-- gsave -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
+                <article id="cmd-gsave" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-green-300">gsave "wiadomość"</code>
                         <span class="text-white font-semibold">Commit i push spięte z roadmapą</span>
@@ -635,7 +655,7 @@ w trzech kliknięciach, bez rejestracji.</span>
                 </article>
 
                 <!-- ctx-done -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
+                <article id="cmd-ctx-done" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-green-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-green-300">ctx-done "fragment"</code>
                         <span class="text-white font-semibold">Odhacza zadanie i zapisuje datę</span>
@@ -692,7 +712,7 @@ w trzech kliknięciach, bez rejestracji.</span>
             <div class="space-y-6 mb-12">
 
                 <!-- onboard -->
-                <article class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-pink-500">
+                <article id="cmd-onboard" class="glass-card rounded-2xl p-6 sm:p-8 border-l-4 border-l-pink-500">
                     <div class="flex flex-wrap items-baseline gap-x-3 gap-y-1 mb-3">
                         <code class="font-mono text-lg font-bold text-pink-300">onboard</code>
                         <span class="text-white font-semibold">Zamienia projekt w jeden prompt startowy</span>
@@ -743,7 +763,7 @@ Sklep z ceramiką...</span></pre>
             </div>
 
             <!-- Bonus: ctx-map -->
-            <div class="glass-card rounded-2xl p-6 border-l-4 border-l-purple-500 flex flex-col sm:flex-row sm:items-center gap-4">
+            <div id="cmd-ctx-map" class="glass-card rounded-2xl p-6 border-l-4 border-l-purple-500 flex flex-col sm:flex-row sm:items-center gap-4">
                 <i class="fas fa-diagram-project text-2xl text-purple-400 sm:mx-3"></i>
                 <div>
                     <h4 class="text-white font-semibold mb-1"><code class="font-mono text-purple-300">ctx-map</code> — gdy projekt urośnie ponad <code class="font-mono text-gray-300">onboard</code></h4>
@@ -751,6 +771,9 @@ Sklep z ceramiką...</span></pre>
                         Ta sama zasada, ale głębiej: drzewo plików, zależności i skrypty z <code class="text-gray-300">package.json</code> oraz wykryte importy lokalne między plikami.
                         Efekt to prompt z prośbą o opis architektury i wskazanie modułów, które robią za dużo. Przydaje się raz na jakiś czas, nie codziennie.
                     </p>
+                </div>
+            </div>
+
                 </div>
             </div>
 
@@ -901,6 +924,10 @@ Sklep z ceramiką...</span></pre>
                                               <option value="https://claude.ai/">Używaj Claude</option>
                                           </select>
                                       </div>
+                                      <div class="flex items-center mt-2">
+                                          <input type="checkbox" id="gen-clipboard" class="w-3 h-3 text-purple-500 bg-void-900 border-white/10 rounded focus:ring-purple-500 accent-purple-500">
+                                          <label for="gen-clipboard" class="ml-2 text-xs text-gray-300">Podgląd schowka w HUD <span class="text-gray-500">(wolniejsze)</span></label>
+                                      </div>
                                 </div>
                                 <button onclick="generateScript()" class="w-full bg-gradient-to-r from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold py-2 px-4 rounded text-sm transition-all shadow-lg shadow-purple-500/25">
                                     Wygeneruj Kod
@@ -916,13 +943,19 @@ Sklep z ceramiką...</span></pre>
                                 <div id="gen-result-container" class="glass-card rounded-xl h-full flex flex-col border border-white/10 overflow-hidden absolute inset-0">
                                     <div class="bg-void-900/80 px-3 py-2 border-b border-white/10 flex justify-between items-center z-20">
                                         <div class="text-[10px] font-mono text-gray-500">powershell-profile.ps1</div>
-                                        <button onclick="copyGeneratedScript()" class="text-cyan-400 hover:text-white transition-colors text-xs font-bold bg-cyan-900/30 px-2 py-1 rounded">
-                                            Kopiuj
-                                        </button>
+                                        <div class="flex items-center gap-2">
+                                            <button onclick="downloadGeneratedScript()" class="text-purple-300 hover:text-white transition-colors text-xs font-bold bg-purple-900/30 px-2 py-1 rounded">
+                                                <i class="fas fa-download mr-1"></i>Pobierz .ps1
+                                            </button>
+                                            <button onclick="copyGeneratedScript()" class="text-cyan-400 hover:text-white transition-colors text-xs font-bold bg-cyan-900/30 px-2 py-1 rounded">
+                                                Kopiuj
+                                            </button>
+                                        </div>
                                     </div>
                                     <div class="p-3 overflow-auto custom-scrollbar flex-grow bg-[#0c0c12]">
                                         <pre><code id="gen-result" class="text-[10px] text-gray-400 font-mono"></code></pre>
                                     </div>
+                                    <p id="gen-note" class="hidden text-[10px] text-yellow-300/90 bg-yellow-500/10 border-t border-yellow-500/20 px-3 py-2 leading-relaxed"></p>
                                 </div>
                             </div>
                         </div>
@@ -937,7 +970,7 @@ Sklep z ceramiką...</span></pre>
                         <p><strong>B.</strong> Skopiuj swój wygenerowany wyżej kod (lub cały z pliku na GitHubie) i wklej do Notatnika. <strong>Zapisz i zamknij.</strong></p>
                         <p><strong>C.</strong> Odśwież terminal wpisując w nim:</p>
                         <div class="bg-void-900 border border-white/10 rounded-lg p-2 font-mono text-blue-300 inline-block">. $PROFILE</div>
-                        <div class="mt-2 text-xs text-gray-500 bg-void-900/50 p-2 rounded border border-white/5">
+                        <div class="mt-2 text-xs text-gray-400 bg-void-900/50 p-2 rounded border border-white/5">
                             Czerwony błąd? Wpisz to, potwierdź i powtórz krok C:<br>
                             <code>Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned</code>
                         </div>
@@ -966,7 +999,7 @@ Sklep z ceramiką...</span></pre>
                 <i class="fas fa-terminal text-purple-500"></i>
                 <span class="font-bold text-white">Void<span class="text-purple-400 font-normal">Workflow</span></span>
             </div>
-            <p class="text-gray-500 text-sm max-w-md">
+            <p class="text-gray-400 text-sm max-w-md">
                 Stworzone po to, żebyś nie musiał płacić za API, gdy masz już dostęp do najlepszych modeli przez WWW. Koduj mądrze.
             </p>
             <a href="https://github.com/toniaczlog/void-terminal-workflow" class="text-gray-400 hover:text-white transition-colors mt-2">
@@ -1166,48 +1199,84 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // Logika Generatora
-async function generateScript() {
-    const author = document.getElementById('gen-author').value.trim() || 'toniaczlog';
+function buildVoidConfig() {
     const theme = document.getElementById('gen-theme').value;
     const offline = document.getElementById('gen-offline').checked;
     const zombie = document.getElementById('gen-zombie').checked;
     const browser = document.getElementById('gen-browser').checked;
+    const clipboard = document.getElementById('gen-clipboard').checked;
     const browserUrl = document.getElementById('gen-browser-url').value;
+
+    return `$global:VoidConfig = @{
+    Theme = "${theme}" # Opcje: Default, QuestLog, Matrix, Magic, Colourblocks
+    EnableZombieScanner = $${zombie ? 'true' : 'false'}
+    EnableOfflineRadar = $${offline ? 'true' : 'false'}
+    EnableAutoBrowser = $${browser ? 'true' : 'false'}
+    EnableClipboardHud = $${clipboard ? 'true' : 'false'}
+    HudCacheSeconds = 5
+    AiUrl = "${browserUrl}"
+}`;
+}
+
+function showGeneratorResult(text, note) {
+    document.getElementById('gen-result').textContent = text;
+    const noteEl = document.getElementById('gen-note');
+    if (note) {
+        noteEl.innerHTML = note;
+        noteEl.classList.remove('hidden');
+    } else {
+        noteEl.classList.add('hidden');
+    }
+    document.getElementById('gen-placeholder').style.opacity = '0';
+    setTimeout(() => {
+        document.getElementById('gen-placeholder').classList.add('hidden');
+    }, 300);
+}
+
+async function generateScript() {
+    const author = document.getElementById('gen-author').value.trim() || 'toniaczlog';
 
     const btn = document.querySelector('button[onclick="generateScript()"]');
     const originalText = btn.innerHTML;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Generowanie...';
 
     try {
+        // Otwarcie strony z dysku (file://) blokuje fetch — wtedy zamiast błędu
+        // dajemy sam blok konfiguracji do podmiany w pobranym pliku.
+        if (location.protocol === 'file:') {
+            showGeneratorResult(
+                buildVoidConfig(),
+                'Strona działa z dysku, więc nie mogę wczytać całego skryptu. Powyżej masz sam blok konfiguracji — podmień nim <code class="text-white">$global:VoidConfig</code> w pobranym <code class="text-white">powershell-profile.ps1</code>. Pełny generator działa w wersji online.'
+            );
+            return;
+        }
+
         const response = await fetch('./powershell-profile.ps1');
-        if (!response.ok) throw new Error('Nie udało się pobrać szablonu skryptu.');
+        if (!response.ok) throw new Error('HTTP ' + response.status);
         let ps1 = await response.text();
 
-        // Podmiana imienia w logo
         ps1 = ps1.replace(/by toniaczlog/g, "by " + author);
+        ps1 = ps1.replace(/\$global:VoidConfig = @\{[\s\S]*?\n\}/, buildVoidConfig());
 
-        // Podmiana konfiguracji
-        const configRegex = /\$global:VoidConfig = @\{[\s\S]*?\}/;
-        const newConfig = `$global:VoidConfig = @{
-    Theme = "${theme}" # Opcje: Default, QuestLog, Matrix, Magic, Colourblocks
-    EnableZombieScanner = $${zombie ? 'true' : 'false'}
-    EnableOfflineRadar = $${offline ? 'true' : 'false'}
-    EnableAutoBrowser = $${browser ? 'true' : 'false'}
-    AiUrl = "${browserUrl}"
-}`;
-        ps1 = ps1.replace(configRegex, newConfig);
-
-        document.getElementById('gen-result').textContent = ps1;
-        document.getElementById('gen-placeholder').style.opacity = '0';
-        setTimeout(() => {
-            document.getElementById('gen-placeholder').classList.add('hidden');
-        }, 300);
-        
+        showGeneratorResult(ps1, null);
     } catch (e) {
-        alert(e.message);
+        showGeneratorResult(
+            buildVoidConfig(),
+            'Nie udało się pobrać pełnego szablonu (' + e.message + '). Powyżej masz sam blok konfiguracji — podmień nim <code class="text-white">$global:VoidConfig</code> w pliku z GitHuba.'
+        );
     } finally {
         btn.innerHTML = originalText;
     }
+}
+
+function flashButton(btn, label) {
+    const origHtml = btn.innerHTML;
+    btn.innerHTML = label;
+    btn.classList.add('text-green-400');
+    setTimeout(() => {
+        btn.innerHTML = origHtml;
+        btn.classList.remove('text-green-400');
+    }, 2000);
 }
 
 function copyGeneratedScript() {
@@ -1217,16 +1286,59 @@ function copyGeneratedScript() {
         return;
     }
     navigator.clipboard.writeText(text).then(() => {
-        const btn = document.querySelector('button[onclick="copyGeneratedScript()"]');
-        const origHtml = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check"></i> Skopiowano';
-        btn.classList.add('text-green-400');
-        setTimeout(() => {
-            btn.innerHTML = origHtml;
-            btn.classList.remove('text-green-400');
-        }, 2000);
+        flashButton(document.querySelector('button[onclick="copyGeneratedScript()"]'), '<i class="fas fa-check"></i> Skopiowano');
     });
 }
+
+function downloadGeneratedScript() {
+    const text = document.getElementById('gen-result').textContent;
+    if (!text) {
+        alert("Najpierw wygeneruj skrypt!");
+        return;
+    }
+    // BOM na poczatku: bez niego PowerShell 5.1 czyta polskie znaki jako krzaki.
+    const blob = new Blob(["﻿" + text], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'Microsoft.PowerShell_profile.ps1';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+    flashButton(document.querySelector('button[onclick="downloadGeneratedScript()"]'), '<i class="fas fa-check"></i> Pobrano');
+}
+
+// Podswietlanie aktywnej pozycji w spisie komend sekcji CONTEXT.md
+document.addEventListener('DOMContentLoaded', () => {
+    const toc = document.getElementById('ctx-toc');
+    if (!toc || !('IntersectionObserver' in window)) return;
+
+    const links = new Map();
+    toc.querySelectorAll('a').forEach(a => links.set(a.getAttribute('href').slice(1), a));
+
+    const setActive = (id) => {
+        links.forEach((a, key) => {
+            const on = key === id;
+            a.classList.toggle('text-white', on);
+            a.classList.toggle('border-purple-500', on);
+            a.classList.toggle('text-gray-400', !on);
+            a.classList.toggle('border-transparent', !on);
+        });
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        const visible = entries
+            .filter(e => e.isIntersecting)
+            .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+        if (visible) setActive(visible.target.id);
+    }, { rootMargin: '-25% 0px -60% 0px', threshold: 0 });
+
+    links.forEach((a, id) => {
+        const el = document.getElementById(id);
+        if (el) observer.observe(el);
+    });
+});
 </script>
 </body>
 </html>

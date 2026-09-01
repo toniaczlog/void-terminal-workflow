@@ -197,7 +197,11 @@ function ctxadd {
 }
 
 # Etap 6: System Pomocy terminalowej
-function void { pomoc }
+function void {
+    param([string]$Sub)
+    if ($Sub -eq "doctor") { void-doctor; return }
+    pomoc
+}
 function pomoc {
     Write-Host ""
     Write-Host "============ VOID WORKFLOW - SYSTEM POMOCY ============" -ForegroundColor Magenta
@@ -208,11 +212,15 @@ function pomoc {
     Write-Host "  snapshot     - Szybki backup projektu do ZIP"
     Write-Host ""
     Write-Host " KONTEKST AI (CONTEXT.md):" -ForegroundColor Cyan
-    Write-Host "  init-ctx     - Tworzy szablon pamięci projektu"
+    Write-Host "  init-ctx     - Tworzy szablon pamięci projektu (nextjs / vps)"
     Write-Host "  ctx          - Otwiera CONTEXT.md w edytorze"
     Write-Host "  ctxadd `"txt`" - Dopisuje datowaną notatkę"
     Write-Host "  ctx-done `"x`" - Odhacza zadanie w roadmapie"
     Write-Host "  ctx-map      - Mapa architektury i zależności dla AI"
+    Write-Host ""
+    Write-Host " DIAGNOSTYKA:" -ForegroundColor Cyan
+    Write-Host "  void doctor  - Sprawdza git, gh, node, code i uprawnienia"
+    Write-Host "  scratch `"x`"  - Przypina żółtą karteczkę do promptu (scratch clear)"
     Write-Host ""
     Write-Host " RATUNEK & BŁĘDY:" -ForegroundColor Cyan
     Write-Host "  wtf          - Kopiuje ostatni błąd do promptu dla AI"
@@ -256,6 +264,8 @@ $global:VoidConfig = @{
     EnableZombieScanner = $true
     EnableOfflineRadar = $true
     EnableAutoBrowser = $true
+    EnableClipboardHud = $false
+    HudCacheSeconds = 5
     AiUrl = "https://chatgpt.com/"
 }
 
@@ -552,25 +562,29 @@ function radar {
             continue
         }
         
+        # Push/Pop-Location w finally: nawet blad w srodku petli nie zostawi
+        # Cie w cudzym katalogu (wczesniej robil to zwykly Set-Location).
         $gitStatus = "Clean"
-        $originalPath = (Get-Location).Path
-        Set-Location $path
-        if (Get-Command git -ErrorAction SilentlyContinue) {
-            if (Test-Path ".git") {
-                $status = git status --porcelain 2>$null
-                if ($status) { $gitStatus = "Dirty" }
-            } else {
-                $gitStatus = "None"
+        $stackStr = ""
+        Push-Location $path
+        try {
+            if (Get-Command git -ErrorAction SilentlyContinue) {
+                if (Test-Path ".git") {
+                    $status = git status --porcelain 2>$null
+                    if ($status) { $gitStatus = "Dirty" }
+                } else {
+                    $gitStatus = "None"
+                }
             }
-        }
-        
-        $stack = @()
-        if (Test-Path "package.json") { $stack += "Node" }
-        if (Test-Path "docker-compose.yml") { $stack += "Docker" }
-        if ((Test-Path "main.py") -or (Test-Path "requirements.txt")) { $stack += "Python" }
-        $stackStr = if ($stack.Count -gt 0) { "($($stack -join ', '))" } else { "" }
 
-        Set-Location $originalPath
+            $stack = @()
+            if (Test-Path "package.json") { $stack += "Node" }
+            if (Test-Path "docker-compose.yml") { $stack += "Docker" }
+            if ((Test-Path "main.py") -or (Test-Path "requirements.txt")) { $stack += "Python" }
+            if ($stack.Count -gt 0) { $stackStr = "($($stack -join ', '))" }
+        } finally {
+            Pop-Location
+        }
 
         $label = if ($gitStatus -eq "Dirty") { $theme.RadarDirty } elseif ($gitStatus -eq "Clean") { $theme.RadarClean } else { "[ -- ]" }
         $color = if ($gitStatus -eq "Dirty") { $theme.ColorGitDirty } else { $theme.ColorGitClean }
@@ -607,7 +621,11 @@ function todo {
     param([string]$Action, [string]$Task)
     $file = ".\.todo.json"
     $todos = @()
-    if (Test-Path $file) { $todos = Get-Content $file -Raw | ConvertFrom-Json }
+    # ConvertFrom-Json w PS 5.1 oddaje cala tablice jako JEDEN element potoku,
+    # a przy jednym zadaniu - goly obiekt. Dopiero '+=' rozwija oba przypadki
+    # do plaskiej tablicy. Bez tego 'todo add' wywalalo sie na op_Addition,
+    # a zadania z identycznym tekstem zapisywaly sie jako {value:[...],Count:2}.
+    if (Test-Path $file) { $todos += (Get-Content $file -Raw | ConvertFrom-Json) }
     
     if (-not $Action -or $Action -eq "list") {
         Write-Host "`n--- LISTA ZADAŃ ---" -ForegroundColor Cyan
@@ -620,19 +638,31 @@ function todo {
         Write-Host ""
     } elseif ($Action -eq "add") {
         $todos += [PSCustomObject]@{ Text = $Task; Done = $false }
-        $todos | ConvertTo-Json | Set-Content $file
+        # -InputObject zamiast potoku: przy dwoch identycznych zadaniach
+        # potokowy ConvertTo-Json owija je w {value:[...],Count:2} i psuje plik.
+        ConvertTo-Json -InputObject $todos -Depth 5 | Set-Content $file -Encoding UTF8
         Write-Host "✅ Dodano zadanie: $Task" -ForegroundColor Green
     } elseif ($Action -eq "done" -or $Action -eq "rm") {
         $idx = [int]$Task
-        if ($idx -ge 0 -and $idx -lt $todos.Count) {
-            if ($Action -eq "done") {
-                $todos[$idx].Done = $true
-                Write-Host "✅ Zadanie '$($todos[$idx].Text)' oznaczone jako zrobione." -ForegroundColor Green
-            } else {
-                Write-Host "🗑️ Usunięto: $($todos[$idx].Text)" -ForegroundColor Yellow
-                $todos = $todos | Where-Object { $todos.IndexOf($_) -ne $idx }
-            }
-            if ($todos.Count -gt 0) { $todos | ConvertTo-Json | Set-Content $file } else { Remove-Item $file -ErrorAction SilentlyContinue }
+        if ($idx -lt 0 -or $idx -ge $todos.Count) {
+            Write-Host "Nie ma zadania o numerze $idx. Wpisz 'todo list'." -ForegroundColor Red
+            return
+        }
+        if ($Action -eq "done") {
+            $todos[$idx].Done = $true
+            Write-Host "✅ Zadanie '$($todos[$idx].Text)' oznaczone jako zrobione." -ForegroundColor Green
+        } else {
+            Write-Host "🗑️ Usunięto: $($todos[$idx].Text)" -ForegroundColor Yellow
+            # Filtrujemy po pozycji, nie po IndexOf: przy dwoch identycznych
+            # zadaniach IndexOf zwracal numer pierwszego i kasowal zle wpisy.
+            $kept = @()
+            for ($i = 0; $i -lt $todos.Count; $i++) { if ($i -ne $idx) { $kept += $todos[$i] } }
+            $todos = $kept
+        }
+        if ($todos.Count -gt 0) {
+            ConvertTo-Json -InputObject $todos -Depth 5 | Set-Content $file -Encoding UTF8
+        } else {
+            Remove-Item $file -ErrorAction SilentlyContinue
         }
     }
 }
@@ -744,12 +774,96 @@ function brb {
 Set-Alias whoops gundo
 Set-Alias undo gundo
 
+# Przypina "zolta karteczke" do znaku zachety.
+# Uzycie:  scratch "zapytac o padding"
+#          scratch            (pokazuje aktualna notatke)
+#          scratch clear      (zdejmuje karteczke)
+function scratch {
+    param([string]$Note)
+    if (-not $Note) {
+        if ($global:VibeScratchpad) { Write-Host "📌 $($global:VibeScratchpad)" -ForegroundColor Yellow }
+        else { Write-Host "Brak przypiętej notatki. Użycie: scratch `"treść`"" -ForegroundColor DarkGray }
+        return
+    }
+    if ($Note -eq "clear") {
+        $global:VibeScratchpad = $null
+        Write-Host "Karteczka zdjęta." -ForegroundColor Green
+        return
+    }
+    $global:VibeScratchpad = $Note
+    Write-Host "📌 Przypięto do promptu: $Note" -ForegroundColor Green
+}
+
+# Tworzy CONTEXT.md - pamiec projektu dla AI.
+# Uzycie:  init-ctx           (szablon uniwersalny)
+#          init-ctx nextjs    (projekt Next.js / React)
+#          init-ctx vps       (serwer / deployment)
 function init-ctx {
+    param([ValidateSet("default", "nextjs", "vps")][string]$Preset = "default")
+
     if (Test-Path ".\CONTEXT.md") {
         Write-Host "CONTEXT.md już istnieje!" -ForegroundColor Yellow
         return
     }
-    $template = @"
+
+    $common = @"
+
+## Repozytorium
+(uzupełni się samo po komendzie 'ctx-repo')
+
+## Log postępu
+(tutaj lądują wpisy z 'ctxadd' i 'ctx-done')
+"@
+
+    switch ($Preset) {
+        "nextjs" {
+            $template = @"
+# Kontekst Projektu (Next.js / React)
+Pamięć dla AI. Model używa tego pliku, aby zrozumieć nad czym pracujemy.
+
+## Cel Projektu
+(opisz w 2 zdaniach)
+
+## Tech Stack
+- Next.js / React
+- Styling:
+- Baza / storage:
+- Deploy: Vercel
+
+## Struktura
+- Routing (app/ czy pages/):
+- Komponenty współdzielone:
+- Skąd biorą się dane:
+
+## Roadmap / Aktualne zadania
+- [ ]
+$common
+"@
+        }
+        "vps" {
+            $template = @"
+# Kontekst Projektu (VPS / serwer)
+Pamięć dla AI. Model używa tego pliku, aby zrozumieć nad czym pracujemy.
+
+## Cel Projektu
+(opisz w 2 zdaniach)
+
+## Infrastruktura
+- Dostawca i system:
+- Adres / domena:
+- Sposób logowania (użytkownik, klucz):
+- Proces trzymany przez (pm2, systemd, docker):
+
+## Uwaga
+Nie wpisuj tu haseł ani kluczy prywatnych - ten plik trafia do promptu i do repo.
+
+## Roadmap / Aktualne zadania
+- [ ]
+$common
+"@
+        }
+        default {
+            $template = @"
 # Kontekst Projektu
 Pamięć dla AI. Model używa tego pliku, aby zrozumieć nad czym pracujemy.
 
@@ -760,17 +874,89 @@ Pamięć dla AI. Model używa tego pliku, aby zrozumieć nad czym pracujemy.
 -
 -
 
-## Repozytorium
-(uzupełni się samo po komendzie 'ctx-repo')
-
 ## Roadmap / Aktualne zadania
 - [ ]
-
-## Log postępu
-(tutaj lądują wpisy z 'ctxadd' i 'ctx-done')
+$common
 "@
+        }
+    }
+
     $template | Set-Content ".\CONTEXT.md" -Encoding UTF8
-    Write-Host "✅ Utworzono szablon CONTEXT.md!" -ForegroundColor Green
+    Write-Host "✅ Utworzono szablon CONTEXT.md (preset: $Preset)!" -ForegroundColor Green
+    if ($Preset -eq "default") {
+        Write-Host "   Dostępne też: init-ctx nextjs, init-ctx vps" -ForegroundColor DarkGray
+    }
+}
+
+# Audyt srodowiska: co jest zainstalowane, czego brakuje i jak to naprawic.
+function void-doctor {
+    Write-Host "`n🩺 VOID DOCTOR - audyt środowiska`n" -ForegroundColor Cyan
+
+    $checks = @(
+        @{ Name = "git";  Test = { Get-Command git -ErrorAction SilentlyContinue };  Fix = "winget install Git.Git" },
+        @{ Name = "gh (GitHub CLI)"; Test = { Get-Command gh -ErrorAction SilentlyContinue }; Fix = "winget install GitHub.cli, potem: gh auth login" },
+        @{ Name = "node"; Test = { Get-Command node -ErrorAction SilentlyContinue }; Fix = "winget install OpenJS.NodeJS.LTS" },
+        @{ Name = "code (VS Code)"; Test = { Get-Command code -ErrorAction SilentlyContinue }; Fix = "winget install Microsoft.VisualStudioCode (zaznacz 'Add to PATH')" }
+    )
+
+    foreach ($c in $checks) {
+        $found = & $c.Test
+        if ($found) {
+            $ver = ""
+            try { $ver = (& $c.Name.Split(' ')[0] --version 2>$null | Select-Object -First 1) } catch {}
+            Write-Host "  ✅ $($c.Name)" -NoNewline -ForegroundColor Green
+            if ($ver) { Write-Host "  $ver" -ForegroundColor DarkGray } else { Write-Host "" }
+        } else {
+            Write-Host "  ❌ $($c.Name)" -ForegroundColor Red
+            Write-Host "     Napraw: $($c.Fix)" -ForegroundColor DarkGray
+        }
+    }
+
+    # Autoryzacja GitHuba (potrzebna dla ctx-repo)
+    if (Get-Command gh -ErrorAction SilentlyContinue) {
+        gh auth status 2>$null | Out-Null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Host "  ✅ gh auth - zalogowany" -ForegroundColor Green
+        } else {
+            Write-Host "  ❌ gh auth - niezalogowany" -ForegroundColor Red
+            Write-Host "     Napraw: gh auth login" -ForegroundColor DarkGray
+        }
+    }
+
+    # ExecutionPolicy
+    $policy = Get-ExecutionPolicy -Scope CurrentUser
+    if ($policy -in @("RemoteSigned", "Unrestricted", "Bypass")) {
+        Write-Host "  ✅ ExecutionPolicy: $policy" -ForegroundColor Green
+    } else {
+        Write-Host "  ❌ ExecutionPolicy: $policy (profil może się nie ładować)" -ForegroundColor Red
+        Write-Host "     Napraw: Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned" -ForegroundColor DarkGray
+    }
+
+    # Profil
+    if (Test-Path $PROFILE) {
+        Write-Host "  ✅ Profil PowerShell: $PROFILE" -ForegroundColor Green
+    } else {
+        Write-Host "  ❌ Brak pliku profilu" -ForegroundColor Red
+        Write-Host "     Napraw: New-Item -Path `$PROFILE -ItemType File -Force" -ForegroundColor DarkGray
+    }
+
+    # Transkrypcja sesji
+    if (Test-Path $LogFile) {
+        Write-Host "  ✅ Log sesji: $LogFile" -ForegroundColor Green
+    } else {
+        Write-Host "  ⚠️ Log sesji nieaktywny (Start-Transcript nie wystartował)" -ForegroundColor Yellow
+    }
+
+    # Pamiec projektu w biezacym folderze
+    if (Test-Path ".\CONTEXT.md") {
+        $open = (Get-VoidRoadmap).Count
+        Write-Host "  ✅ CONTEXT.md w tym projekcie (otwartych zadań: $open)" -ForegroundColor Green
+    } else {
+        Write-Host "  ⚠️ Brak CONTEXT.md w tym folderze" -ForegroundColor Yellow
+        Write-Host "     Napraw: init-ctx" -ForegroundColor DarkGray
+    }
+
+    Write-Host ""
 }
 
 
@@ -1001,27 +1187,67 @@ function mock-data {
                 "Zwróć czystą tablicę JSON (bez komentarzy i bez markdownu), spójne typy pól, polskie dane tam gdzie to naturalne."
     Send-VoidPrompt -Prompt $promptAI -Info "Prompt na $Count rekordów '$Topic' w schowku!"
 }
+# Wolne odczyty systemowe (CIM/WMI, wolumeny, procesy) potrafia dolozyc setki
+# milisekund do KAZDEGO znaku zachety, a zmieniaja sie powoli. Trzymamy je
+# w pamieci i odswiezamy nie czesciej niz co HudCacheSeconds sekund.
+# Zmiana dysku uniewaznia cache od razu (inne wolne miejsce).
+function Get-VoidHudStats {
+    $ttl = $global:VoidConfig.HudCacheSeconds
+    if ($null -eq $ttl) { $ttl = 5 }
+    $drive = (Get-Location).Drive.Name
+    $now = Get-Date
+
+    if ($global:VoidHudCache -and
+        $global:VoidHudCache.Drive -eq $drive -and
+        ($now - $global:VoidHudCache.Stamp).TotalSeconds -lt $ttl) {
+        return $global:VoidHudCache
+    }
+
+    $cache = @{ Stamp = $now; Drive = $drive; Cpu = 0; Battery = $null; FreeGb = $null; Music = $null; Zombies = 0 }
+
+    try {
+        $cache.Cpu = [math]::Round((Get-CimInstance Win32_Processor -ErrorAction SilentlyContinue | Measure-Object -Property LoadPercentage -Average).Average)
+    } catch {}
+    try {
+        $bat = (Get-CimInstance Win32_Battery -ErrorAction SilentlyContinue)
+        if ($bat) { $cache.Battery = $bat.EstimatedChargeRemaining }
+    } catch {}
+    try {
+        if ($drive) {
+            $vol = Get-Volume -DriveLetter $drive -ErrorAction SilentlyContinue
+            if ($vol) { $cache.FreeGb = [math]::Round($vol.SizeRemaining / 1GB) }
+        }
+    } catch {}
+    try {
+        $spotify = Get-Process Spotify -ErrorAction SilentlyContinue | Where-Object MainWindowTitle -ne "" | Select-Object -First 1
+        if ($spotify) { $cache.Music = $spotify.MainWindowTitle }
+    } catch {}
+    if ($global:VoidConfig.EnableZombieScanner) {
+        try { $cache.Zombies = @(Get-Process node -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -eq "" }).Count } catch {}
+    }
+
+    $global:VoidHudCache = $cache
+    return $cache
+}
+
 function prompt {
     $err = $LASTEXITCODE
     $theme = Get-VoidTheme -ThemeName $global:VoidConfig.Theme
-    
+    $stats = Get-VoidHudStats
+
     # ---------------------------------------------
     # GROMADZENIE DANYCH DO TOP BARA
     # ---------------------------------------------
-    
-    # 1. CPU (bardzo szybki call)
-    $cpu = 0
-    try { $cpu = [math]::Round((Get-CimInstance Win32_Processor -ErrorAction SilentlyContinue | Measure-Object -Property LoadPercentage -Average).Average) } catch {}
+
+    # 1. CPU (z cache)
+    $cpu = $stats.Cpu
     $cpuBlocks = " "
     if ($cpu -gt 80) { $cpuBlocks = "▃▅▇" } elseif ($cpu -gt 40) { $cpuBlocks = "▃▅ " } else { $cpuBlocks = "▃  " }
-    
-    # 2. Bateria
+
+    # 2. Bateria (z cache)
     $batStr = ""
-    try {
-        $bat = (Get-CimInstance Win32_Battery -ErrorAction SilentlyContinue)
-        if ($bat) { $batStr = "──[ 🔋 $($bat.EstimatedChargeRemaining)% ]" }
-    } catch {}
-    
+    if ($null -ne $stats.Battery) { $batStr = "──[ 🔋 $($stats.Battery)% ]" }
+
     # 3. Git Status i Branch Protection
     $gitStr = ""
     $branchAlarm = ""
@@ -1056,11 +1282,10 @@ function prompt {
         }
     }
     
-    # 5. Spotify (tylko proces)
+    # 5. Spotify (z cache)
     $musicStr = ""
-    $spotify = Get-Process Spotify -ErrorAction SilentlyContinue | Where-Object MainWindowTitle -ne "" | Select-Object -First 1
-    if ($spotify) {
-        $title = $spotify.MainWindowTitle
+    if ($stats.Music) {
+        $title = $stats.Music
         if ($title.Length -gt 20) { $title = $title.Substring(0,17) + "..." }
         $musicStr = "──[ 🎵 $title ]"
     }
@@ -1068,16 +1293,11 @@ function prompt {
     # ---------------------------------------------
     # GROMADZENIE DANYCH DO BOTTOM BARA
     # ---------------------------------------------
-    
-    
-    # 2. Wolne miejsce
-    $drive = (Get-Location).Drive.Name
+
+    # 2. Wolne miejsce (z cache)
     $spaceStr = ""
-    if ($drive) {
-        $vol = Get-Volume -DriveLetter $drive -ErrorAction SilentlyContinue
-        if ($vol) { $spaceStr = "─[ 💾 Wolne: $([math]::Round($vol.SizeRemaining / 1GB))GB ]" }
-    }
-    
+    if ($null -ne $stats.FreeGb) { $spaceStr = "─[ 💾 Wolne: $($stats.FreeGb)GB ]" }
+
     # 3. TODO
     $todoStr = ""
     if (Test-Path ".\.todo.json") {
@@ -1090,21 +1310,17 @@ function prompt {
         }
     }
     
-    # 4. Schowek
+    # 4. Schowek — domyslnie WYLACZONY.
+    # Odczyt schowka przy kazdym znaku zachety kosztuje, a HUD widzi wtedy
+    # rowniez hasla i tokeny, ktore akurat kopiujesz. Wlacz swiadomie przez
+    # $global:VoidConfig.EnableClipboardHud = $true
     $clipStr = ""
-    $clip = Get-Clipboard -ErrorAction SilentlyContinue
-    if ($clip) {
-        $clipStr = "──[ 📋 Tekst ($($clip.Length)) ]"
+    if ($global:VoidConfig.EnableClipboardHud) {
+        $clip = Get-Clipboard -ErrorAction SilentlyContinue
+        if ($clip) { $clipStr = "──[ 📋 Tekst ($($clip.Length)) ]" }
     }
-    
-    # 5. Ostatnio edytowany
-    $lastMod = ""
-    $recent = Get-ChildItem -File -ErrorAction SilentlyContinue | Sort-Object LastWriteTime -Descending | Select-Object -First 1
-    if ($recent) {
-        $lastMod = "──[ 📝 Ost: $($recent.Name) ]"
-    }
-    
-    # 6. Tip
+
+    # 5. Tip
     $tips = @("Tip: wpisz 'brb'", "Tip: 'qr-link 3000' to skaner", "Tip: 'wtf' zapyta AI", "Tip: 'onboard' to prompt")
     $tip = $tips[(Get-Date).Second % $tips.Count]
 
@@ -1142,9 +1358,8 @@ function prompt {
     if ($global:VoidConfig.EnableOfflineRadar) {
         try { if (-not [System.Net.NetworkInformation.NetworkInterface]::GetIsNetworkAvailable()) { Write-Host " $($theme.MsgOffline)" -ForegroundColor Red } } catch {}
     }
-    if ($global:VoidConfig.EnableZombieScanner) {
-        $zombies = @(Get-Process node -ErrorAction SilentlyContinue | Where-Object { $_.MainWindowTitle -eq "" })
-        if ($zombies.Count -gt 3) { Write-Host " $($theme.MsgZombie -f $zombies.Count)" -ForegroundColor Yellow }
+    if ($global:VoidConfig.EnableZombieScanner -and $stats.Zombies -gt 3) {
+        Write-Host " $($theme.MsgZombie -f $stats.Zombies)" -ForegroundColor Yellow
     }
     if ($global:VibeScratchpad) {
         Write-Host " 📌 $($global:VibeScratchpad)" -ForegroundColor Yellow
